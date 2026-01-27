@@ -8,7 +8,6 @@ import { AdminView } from './components/AdminView';
 import { NoticeView } from './components/NoticeView';
 import { LoginView } from './components/LoginView';
 import { FloatingMenu } from './components/FloatingMenu';
-import { AgeVerificationPopup } from './components/AgeVerificationPopup';
 import { 
   ChevronLeft,
   LogOut
@@ -25,10 +24,6 @@ const App: React.FC = () => {
     const savedTheme = localStorage.getItem('vh_theme');
     // Se não houver tema salvo, retorna false (light mode padrão)
     return savedTheme === null ? false : savedTheme === 'dark';
-  });
-
-  const [isAgeVerified, setIsAgeVerified] = useState(() => {
-    return sessionStorage.getItem('vh_age_verified') === 'true';
   });
 
   const [banners, setBanners] = useState<Banner[]>([]);
@@ -131,11 +126,6 @@ const App: React.FC = () => {
     storageService.saveBottomPromoCard(newPromo);
   };
 
-  const handleAgeVerify = () => {
-    setIsAgeVerified(true);
-    sessionStorage.setItem('vh_age_verified', 'true');
-  };
-
   const theme = {
     bgMain: isDarkMode ? 'bg-zinc-950' : 'bg-zinc-100',
     bgFrame: isDarkMode ? 'bg-zinc-900' : 'bg-white',
@@ -182,13 +172,8 @@ const App: React.FC = () => {
           </div>
         ) : (
           <>
-            {/* Camada 2: Conteúdo Real (Sempre visível) */}
+            {/* Conteúdo Principal */}
             <>
-              {/* Camada 3: Popup de Verificação de Idade (Overlay não-bloqueante) */}
-              {!isAgeVerified && currentView !== 'admin' && currentView !== 'login' && (
-                <AgeVerificationPopup onVerify={handleAgeVerify} isDarkMode={isDarkMode} />
-              )}
-              
               {/* Conteúdo Principal */}
               <header className={`h-16 backdrop-blur-xl border-b flex items-center px-4 sticky top-0 z-50 transition-colors ${theme.bgHeader}`}>
                   <div className="absolute left-4 z-10">
@@ -281,7 +266,6 @@ const App: React.FC = () => {
                         className="flex items-center justify-center gap-1.5 cursor-pointer select-none active:opacity-60 transition-opacity group"
                         onClick={goToAdmin}
                       >
-                        <div className={`w-3.5 h-3.5 rounded-full border border-violet-500 flex items-center justify-center text-[7px] font-bold text-violet-500 group-hover:bg-violet-500/10 transition-colors`}>18</div>
                         <span className="text-[9px] font-bold text-violet-500 uppercase tracking-widest">Administrative Dashboard Access</span>
                       </div>
                       <p className={`text-[8px] font-medium tracking-tight ${isDarkMode ? 'text-zinc-600' : 'text-zinc-400'}`}>

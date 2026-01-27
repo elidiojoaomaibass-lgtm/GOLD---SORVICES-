@@ -37,58 +37,132 @@ const safeSaveLocal = (key: string, data: any) => {
   }
 };
 
+// ==========================================
+// HELPERS DE MAPEAMENTO (CamelCase <-> SnakeCase)
+// ==========================================
+
+const mapBannerToDb = (b: Banner, index: number) => ({
+  id: b.id,
+  image_url: b.imageUrl,
+  link: b.link,
+  button_text: b.buttonText,
+  type: b.type || 'image',
+  sort_order: index,
+  updated_at: new Date().toISOString()
+});
+
+const mapBannerFromDb = (b: any): Banner => ({
+  id: b.id,
+  imageUrl: b.image_url,
+  link: b.link,
+  buttonText: b.button_text,
+  type: b.type
+});
+
+const mapVideoToDb = (v: VideoCard, index: number) => ({
+  id: v.id,
+  title: v.title,
+  cover_url: v.coverUrl,
+  previews: v.previews,
+  buy_link: v.buyLink,
+  buy_button_text: v.buyButtonText,
+  telegram_link: v.telegramLink,
+  telegram_button_text: v.telegramButtonText,
+  sort_order: index,
+  updated_at: new Date().toISOString()
+});
+
+const mapVideoFromDb = (v: any): VideoCard => ({
+  id: v.id,
+  title: v.title,
+  coverUrl: v.cover_url,
+  previews: v.previews || [],
+  buyLink: v.buy_link,
+  buyButtonText: v.buy_button_text,
+  telegramLink: v.telegram_link,
+  telegramButtonText: v.telegram_button_text
+});
+
+const mapNoticeToDb = (n: Notice, index: number) => ({
+  id: n.id,
+  title: n.title,
+  content: n.content,
+  date: n.date,
+  sort_order: index,
+  updated_at: new Date().toISOString()
+});
+
+const mapNoticeFromDb = (n: any): Notice => ({
+  id: n.id,
+  title: n.title,
+  content: n.content,
+  date: n.date,
+  sort_order: n.sort_order
+});
+
+const mapPromoToDb = (p: PromoCard, id: string) => ({
+  id: id,
+  title: p.title,
+  description: p.description,
+  button_text: p.buttonText,
+  button_link: p.buttonLink,
+  is_active: p.isActive,
+  updated_at: new Date().toISOString()
+});
+
+const mapPromoFromDb = (p: any): PromoCard => ({
+  title: p.title || '',
+  description: p.description || '',
+  buttonText: p.button_text || '',
+  buttonLink: p.button_link || '',
+  isActive: p.is_active || false
+});
+
 export const storageService = {
   // ========== BANNERS ==========
   getBanners: async (): Promise<Banner[]> => {
     if (supabase) {
-      const { data, error } = await supabase.from('banners').select('*').order('sort_order', { ascending: true });
-      if (!error && data && data.length > 0) return data;
+      const { data, error } = await supabase
+        .from('banners')
+        .select('*')
+        .order('sort_order', { ascending: true });
+        
+      if (!error && data) {
+        return data.map(mapBannerFromDb);
+      }
     }
     const data = localStorage.getItem(BANNERS_KEY);
     return data ? JSON.parse(data) : DEFAULT_BANNERS;
   },
 
   saveBanners: async (banners: Banner[]) => {
+    // Salvar localmente como backup/otimização
     safeSaveLocal(BANNERS_KEY, banners);
+    
     if (supabase) {
       try {
-        await supabase.from('banners').delete().neq('id', '0');
-        const payload = banners.map((b, idx) => ({ ...b, sort_order: idx }));
-        await supabase.from('banners').insert(payload);
+        // Buscar IDs existentes para limpar deletados
+        const { data: existing } = await supabase.from('banners').select('id');
+        const existingIds = existing?.map(b => b.id) || [];
+        
+        // UPSERT todos os banners mapeados
+        const payload = banners.map((b, idx) => mapBannerToDb(b, idx));
+        
+        if (payload.length > 0) {
+          const { error } = await supabase.from('banners').upsert(payload, {
+            onConflict: 'id'
+          });
+          if (error) console.error("Error upserting banners:", error);
+        }
+        
+        // Deletar banners removidos
+        const currentIds = banners.map(b => b.id);
+        const toDelete = existingIds.filter(id => !currentIds.includes(id));
+        if (toDelete.length > 0) {
+          await supabase.from('banners').delete().in('id', toDelete);
+        }
       } catch (err) {
         console.error("Error saving banners:", err);
-      }
-    }
-  },
-
-  deleteBanner: async (id: string) => {
-    // 1. Atualizar LocalStorage
-    const current = JSON.parse(localStorage.getItem(BANNERS_KEY) || '[]');
-    const updated = current.filter((b: any) => b.id !== id);
-    safeSaveLocal(BANNERS_KEY, updated);
-
-    // 2. Atualizar Supabase
-    if (supabase) {
-      try {
-        await supabase.from('banners').delete().eq('id', id);
-      } catch (err) {
-        console.error("Error deleting banner:", err);
-      }
-    }
-  },
-
-  updateBanner: async (banner: Banner) => {
-    // 1. Atualizar LocalStorage
-    const current = JSON.parse(localStorage.getItem(BANNERS_KEY) || '[]');
-    const updated = current.map((b: any) => b.id === banner.id ? banner : b);
-    safeSaveLocal(BANNERS_KEY, updated);
-
-    // 2. Atualizar Supabase
-    if (supabase) {
-      try {
-        await supabase.from('banners').upsert(banner);
-      } catch (err) {
-        console.error("Error updating banner:", err);
       }
     }
   },
@@ -96,8 +170,14 @@ export const storageService = {
   // ========== VIDEOS ==========
   getVideos: async (): Promise<VideoCard[]> => {
     if (supabase) {
-      const { data, error } = await supabase.from('videos').select('*').order('sort_order', { ascending: true });
-      if (!error && data && data.length > 0) return data;
+      const { data, error } = await supabase
+        .from('videos')
+        .select('*')
+        .order('sort_order', { ascending: true });
+        
+      if (!error && data) {
+        return data.map(mapVideoFromDb);
+      }
     }
     const data = localStorage.getItem(VIDEOS_KEY);
     return data ? JSON.parse(data) : DEFAULT_VIDEOS;
@@ -105,43 +185,28 @@ export const storageService = {
 
   saveVideos: async (videos: VideoCard[]) => {
     safeSaveLocal(VIDEOS_KEY, videos);
+    
     if (supabase) {
       try {
-        await supabase.from('videos').delete().neq('id', '0');
-        const payload = videos.map((v, idx) => ({ ...v, sort_order: idx }));
-        await supabase.from('videos').insert(payload);
+        // Estratégia simples: Deletar tudo e reinserir para garantir ordem (cuidado em prod massivo, mas ok aqui)
+        // Ou melhor: Upsert igual banners
+        const { data: existing } = await supabase.from('videos').select('id');
+        const existingIds = existing?.map(v => v.id) || [];
+        
+        const payload = videos.map((v, idx) => mapVideoToDb(v, idx));
+        
+        if (payload.length > 0) {
+           const { error } = await supabase.from('videos').upsert(payload, { onConflict: 'id' });
+           if (error) console.error("Error upserting videos:", error);
+        }
+
+        const currentIds = videos.map(v => v.id);
+        const toDelete = existingIds.filter(id => !currentIds.includes(id));
+        if (toDelete.length > 0) {
+          await supabase.from('videos').delete().in('id', toDelete);
+        }
       } catch (err) {
         console.error("Error saving videos:", err);
-      }
-    }
-  },
-
-  deleteVideo: async (id: string) => {
-    // 1. Atualizar LocalStorage
-    const current = JSON.parse(localStorage.getItem(VIDEOS_KEY) || '[]');
-    const updated = current.filter((v: any) => v.id !== id);
-    safeSaveLocal(VIDEOS_KEY, updated);
-
-    if (supabase) {
-      try {
-        await supabase.from('videos').delete().eq('id', id);
-      } catch (err) {
-        console.error("Error deleting video:", err);
-      }
-    }
-  },
-
-  updateVideo: async (video: VideoCard) => {
-    // 1. Atualizar LocalStorage
-    const current = JSON.parse(localStorage.getItem(VIDEOS_KEY) || '[]');
-    const updated = current.map((v: any) => v.id === video.id ? video : v);
-    safeSaveLocal(VIDEOS_KEY, updated);
-
-    if (supabase) {
-      try {
-        await supabase.from('videos').upsert(video);
-      } catch (err) {
-        console.error("Error updating video:", err);
       }
     }
   },
@@ -149,8 +214,14 @@ export const storageService = {
   // ========== NOTICES ==========
   getNotices: async (): Promise<Notice[]> => {
     if (supabase) {
-      const { data, error } = await supabase.from('notices').select('*').order('sort_order', { ascending: true });
-      if (!error && data && data.length > 0) return data;
+      const { data, error } = await supabase
+        .from('notices')
+        .select('*')
+        .order('sort_order', { ascending: true });
+        
+      if (!error && data) {
+        return data.map(mapNoticeFromDb);
+      }
     }
     const data = localStorage.getItem(NOTICES_KEY);
     return data ? JSON.parse(data) : DEFAULT_NOTICES;
@@ -158,68 +229,50 @@ export const storageService = {
 
   saveNotices: async (notices: Notice[]) => {
     safeSaveLocal(NOTICES_KEY, notices);
+    
     if (supabase) {
       try {
-        await supabase.from('notices').delete().neq('id', '0');
-        const payload = notices.map((n, idx) => ({ ...n, sort_order: idx }));
-        await supabase.from('notices').insert(payload);
+        const { data: existing } = await supabase.from('notices').select('id');
+        const existingIds = existing?.map(n => n.id) || [];
+        
+        const payload = notices.map((n, idx) => mapNoticeToDb(n, idx));
+        
+        if (payload.length > 0) {
+          const { error } = await supabase.from('notices').upsert(payload, { onConflict: 'id' });
+          if (error) console.error("Error upserting notices:", error);
+        }
+        
+        const currentIds = notices.map(n => n.id);
+        const toDelete = existingIds.filter(id => !currentIds.includes(id));
+        if (toDelete.length > 0) {
+          await supabase.from('notices').delete().in('id', toDelete);
+        }
       } catch (err) {
         console.error("Error saving notices:", err);
       }
     }
   },
 
-  deleteNotice: async (id: string) => {
-    // 1. Atualizar LocalStorage
-    const current = JSON.parse(localStorage.getItem(NOTICES_KEY) || '[]');
-    const updated = current.filter((n: any) => n.id !== id);
-    safeSaveLocal(NOTICES_KEY, updated);
-
-    if (supabase) {
-      try {
-        await supabase.from('notices').delete().eq('id', id);
-      } catch (err) {
-        console.error("Error deleting notice:", err);
-      }
-    }
-  },
-
-  updateNotice: async (notice: Notice) => {
-    // 1. Atualizar LocalStorage
-    const current = JSON.parse(localStorage.getItem(NOTICES_KEY) || '[]');
-    const updated = current.map((n: any) => n.id === notice.id ? notice : n);
-    safeSaveLocal(NOTICES_KEY, updated);
-
-    if (supabase) {
-      try {
-        await supabase.from('notices').upsert(notice);
-      } catch (err) {
-        console.error("Error updating notice:", err);
-      }
-    }
-  },
-
-  // ========== PROMO CARDS ==========
-  // ========== PROMO CARDS ==========
   // ========== PROMO CARDS ==========
   getPromoCard: async (): Promise<PromoCard> => {
-    // PRIORIDADE TOTAL AO LOCALSTORAGE PARA EVITAR PERDA DE DADOS
+    // Tenta Supabase PRIMEIRO (Fonte da verdade)
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('promos')
+        .select('*')
+        .eq('id', 'top')
+        .single();
+        
+      if (!error && data) {
+        return mapPromoFromDb(data);
+      }
+    }
+    
+    // Fallback LocalStorage
     try {
       const stored = localStorage.getItem(PROMO_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        // Se tiver dados válidos locais, retorna eles e ignora o banco na inicialização
-        if (parsed && (parsed.title || parsed.isActive)) {
-          return parsed;
-        }
-      }
+      if (stored) return JSON.parse(stored);
     } catch(e) {}
-
-    // Só busca no banco se não tiver nada local
-    if (supabase) {
-      const { data, error } = await supabase.from('promos').select('*').eq('id', 'top').single();
-      if (!error && data) return data;
-    }
     
     return DEFAULT_PROMO;
   },
@@ -227,27 +280,31 @@ export const storageService = {
   savePromoCard: async (promo: PromoCard) => {
     safeSaveLocal(PROMO_KEY, promo);
     if (supabase) {
-      const { error } = await supabase.from('promos').upsert({ ...promo, id: 'top' });
-      if (error) console.error("Erro CRITICO ao salvar Promo Top no Supabase:", error);
+      const payload = mapPromoToDb(promo, 'top');
+      const { error } = await supabase.from('promos').upsert(payload);
+      if (error) console.error("Erro ao salvar Promo Top no Supabase:", error);
     }
   },
 
   getBottomPromoCard: async (): Promise<PromoCard> => {
-    // PRIORIDADE TOTAL AO LOCALSTORAGE
+    // Tenta Supabase PRIMEIRO
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('promos')
+        .select('*')
+        .eq('id', 'bottom')
+        .single();
+        
+      if (!error && data) {
+        return mapPromoFromDb(data);
+      }
+    }
+
+    // Fallback LocalStorage
     try {
       const stored = localStorage.getItem(BOTTOM_PROMO_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed && (parsed.title || parsed.isActive)) {
-          return parsed;
-        }
-      }
+      if (stored) return JSON.parse(stored);
     } catch(e) {}
-
-    if (supabase) {
-      const { data, error } = await supabase.from('promos').select('*').eq('id', 'bottom').single();
-      if (!error && data) return data;
-    }
     
     return DEFAULT_BOTTOM_PROMO;
   },
@@ -255,8 +312,9 @@ export const storageService = {
   saveBottomPromoCard: async (promo: PromoCard) => {
     safeSaveLocal(BOTTOM_PROMO_KEY, promo);
     if (supabase) {
-      const { error } = await supabase.from('promos').upsert({ ...promo, id: 'bottom' });
-      if (error) console.error("Erro CRITICO ao salvar Promo Bottom no Supabase:", error);
+      const payload = mapPromoToDb(promo, 'bottom');
+      const { error } = await supabase.from('promos').upsert(payload);
+      if (error) console.error("Erro ao salvar Promo Bottom no Supabase:", error);
     }
   },
 
@@ -271,63 +329,66 @@ export const storageService = {
 
     const channels: any[] = [];
 
-    // Subscribe to banners changes
+    // Banners subscription
     if (callbacks.onBannersChange) {
       const bannersChannel = supabase
         .channel('banners-changes')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'banners' }, async () => {
           const { data } = await supabase.from('banners').select('*').order('sort_order', { ascending: true });
           if (data) {
-            safeSaveLocal(BANNERS_KEY, data);
-            callbacks.onBannersChange!(data);
+            const mapped = data.map(mapBannerFromDb);
+            safeSaveLocal(BANNERS_KEY, mapped);
+            callbacks.onBannersChange!(mapped);
           }
         })
         .subscribe();
       channels.push(bannersChannel);
     }
 
-    // Subscribe to videos changes
+    // Videos subscription
     if (callbacks.onVideosChange) {
       const videosChannel = supabase
         .channel('videos-changes')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'videos' }, async () => {
           const { data } = await supabase.from('videos').select('*').order('sort_order', { ascending: true });
           if (data) {
-            safeSaveLocal(VIDEOS_KEY, data);
-            callbacks.onVideosChange!(data);
+            const mapped = data.map(mapVideoFromDb);
+            safeSaveLocal(VIDEOS_KEY, mapped);
+            callbacks.onVideosChange!(mapped);
           }
         })
         .subscribe();
       channels.push(videosChannel);
     }
 
-    // Subscribe to notices changes
+    // Notices subscription
     if (callbacks.onNoticesChange) {
       const noticesChannel = supabase
         .channel('notices-changes')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'notices' }, async () => {
           const { data } = await supabase.from('notices').select('*').order('sort_order', { ascending: true });
           if (data) {
-            safeSaveLocal(NOTICES_KEY, data);
-            callbacks.onNoticesChange!(data);
+            const mapped = data.map(mapNoticeFromDb);
+            safeSaveLocal(NOTICES_KEY, mapped);
+            callbacks.onNoticesChange!(mapped);
           }
         })
         .subscribe();
       channels.push(noticesChannel);
     }
 
-    // Subscribe to promos changes
+    // Promos subscription
     if (callbacks.onPromosChange) {
       const promosChannel = supabase
         .channel('promos-changes')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'promos' }, () => {
+          // Apenas notifica que mudou, o app recarrega os dados
           callbacks.onPromosChange!();
         })
         .subscribe();
       channels.push(promosChannel);
     }
 
-    // Return cleanup function
     return () => {
       channels.forEach(channel => supabase.removeChannel(channel));
     };
