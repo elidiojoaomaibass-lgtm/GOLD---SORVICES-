@@ -156,22 +156,43 @@ export const AdminView: React.FC<Props> = ({
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    let result: { synced: boolean } = { synced: false };
+
     if (tab === 'banners') {
       if (!formBanner.imageUrl) return;
-      if (editingId) setBanners(banners.map(b => b.id === editingId ? { ...b, ...formBanner } as Banner : b));
-      else setBanners([...banners, { id: Date.now().toString(), imageUrl: formBanner.imageUrl!, buttonText: formBanner.buttonText || 'Saiba Mais', link: formBanner.link || '', type: formBanner.type || 'image' }]);
+      let newBanners;
+      if (editingId) newBanners = banners.map(b => b.id === editingId ? { ...b, ...formBanner } as Banner : b);
+      else newBanners = [...banners, { id: Date.now().toString(), imageUrl: formBanner.imageUrl!, buttonText: formBanner.buttonText || 'Saiba Mais', link: formBanner.link || '', type: formBanner.type || 'image' }];
+      
+      setBanners(newBanners);
+      result = await storageService.saveBanners(newBanners);
+
     } else if (tab === 'videos') {
       if (!formVideo.coverUrl) return;
       const validPreviews = (formVideo.previews || []).filter(url => url.trim() !== '');
-      if (editingId) setVideos(videos.map(v => v.id === editingId ? { ...v, ...formVideo, previews: validPreviews } as VideoCard : v));
-      else setVideos([...videos, { id: Date.now().toString(), title: formVideo.title || 'Premium Video', coverUrl: formVideo.coverUrl!, previews: validPreviews, buyLink: formVideo.buyLink || '', buyButtonText: formVideo.buyButtonText || 'BUY ALL PACK', telegramLink: formVideo.telegramLink || '', telegramButtonText: formVideo.telegramButtonText || 'DM TELEGRAM' }]);
+      let newVideos;
+      if (editingId) newVideos = videos.map(v => v.id === editingId ? { ...v, ...formVideo, previews: validPreviews } as VideoCard : v);
+      else newVideos = [...videos, { id: Date.now().toString(), title: formVideo.title || 'Premium Video', coverUrl: formVideo.coverUrl!, previews: validPreviews, buyLink: formVideo.buyLink || '', buyButtonText: formVideo.buyButtonText || 'BUY ALL PACK', telegramLink: formVideo.telegramLink || '', telegramButtonText: formVideo.telegramButtonText || 'DM TELEGRAM' }];
+      
+      setVideos(newVideos);
+      result = await storageService.saveVideos(newVideos);
+
     } else if (tab === 'notices') {
       if (!formNotice.title || !formNotice.content) return;
-      if (editingId) setNotices(notices.map(n => n.id === editingId ? { ...n, ...formNotice } as Notice : n));
-      else setNotices([...notices, { id: Date.now().toString(), title: formNotice.title!, content: formNotice.content!, date: formNotice.date || new Date().toLocaleDateString('pt-BR') }]);
+      let newNotices;
+      if (editingId) newNotices = notices.map(n => n.id === editingId ? { ...n, ...formNotice } as Notice : n);
+      else newNotices = [...notices, { id: Date.now().toString(), title: formNotice.title!, content: formNotice.content!, date: formNotice.date || new Date().toLocaleDateString('pt-BR') }];
+      
+      setNotices(newNotices);
+      result = await storageService.saveNotices(newNotices);
     }
+
     closeModal();
+
+    if (!result.synced) {
+      alert("⚠️ ATENÇÃO: Os dados foram salvos APENAS NO SEU NAVEGADOR porque a conexão com o banco de dados falhou ou não está configurada.\n\nOutros usuários NÃO verão essas alterações até que o problema de conexão seja resolvido.");
+    }
   };
 
   const closeModal = () => {
@@ -210,8 +231,19 @@ const PromoSection = ({ title, data, onSave, icon: Icon, isDarkMode }: { title: 
     setIsDirty(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     onSave(localData);
+    let result;
+    if (title.includes('Superior')) {
+       result = await storageService.savePromoCard(localData);
+    } else {
+       result = await storageService.saveBottomPromoCard(localData);
+    }
+    
+    if (result && !result.synced) {
+      alert("⚠️ Salvo apenas localmente (Offline)");
+    }
+    
     setIsDirty(false);
   };
 
