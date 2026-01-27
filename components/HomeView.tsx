@@ -42,10 +42,14 @@ const VideoFeedItem: React.FC<VideoPlayerProps> = ({ video, isDarkMode }) => {
 
   const handleVideoEnd = () => {
     if (validPreviews.length > 1) {
-      // Avançar para o próximo vídeo
-      const nextIndex = (currentPreviewIndex + 1) % validPreviews.length;
-      setCurrentPreviewIndex(nextIndex);
-      // O useEffect acima cuidará do play
+      if (currentPreviewIndex < validPreviews.length - 1) {
+        // Se não for o último, avança
+        setCurrentPreviewIndex(currentPreviewIndex + 1);
+      } else {
+        // Se for o último, para e volta para o primeiro (sem tocar)
+        setIsPlaying(false);
+        setCurrentPreviewIndex(0);
+      }
     } else {
       setIsPlaying(false);
     }
@@ -88,6 +92,18 @@ const VideoFeedItem: React.FC<VideoPlayerProps> = ({ video, isDarkMode }) => {
     }
   };
 
+  const [progress, setProgress] = useState(0);
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      const duration = videoRef.current.duration;
+      const currentTime = videoRef.current.currentTime;
+      if (duration > 0) {
+        setProgress((currentTime / duration) * 100);
+      }
+    }
+  };
+
   return (
     <div className={`p-4 rounded-2xl border transition-all duration-500 group animate-in fade-in slide-in-from-bottom-4 shadow-sm ${isDarkMode ? 'bg-zinc-900/40 border-zinc-800' : 'bg-white border-zinc-100'}`}>
       <div 
@@ -97,10 +113,12 @@ const VideoFeedItem: React.FC<VideoPlayerProps> = ({ video, isDarkMode }) => {
         <video 
           ref={videoRef}
           src={currentVideoUrl} 
-          poster={video.coverUrl}
+          // Only show poster if not playing (prevents flicker between videos)
+          poster={!isPlaying ? video.coverUrl : undefined}
           playsInline 
-          className="w-full h-full object-contain"
+          className="w-full h-full object-contain bg-black"
           onEnded={handleVideoEnd}
+          onTimeUpdate={handleTimeUpdate}
         />
         
         {/* Indicadores de Progresso (Story-like) */}
@@ -109,12 +127,15 @@ const VideoFeedItem: React.FC<VideoPlayerProps> = ({ video, isDarkMode }) => {
              {validPreviews.map((_, idx) => (
                <div 
                  key={idx} 
-                 className={`h-0.5 rounded-full flex-1 transition-colors duration-300 ${
-                   idx === currentPreviewIndex 
-                     ? 'bg-white' 
-                     : idx < currentPreviewIndex ? 'bg-white/50' : 'bg-white/20'
-                 }`} 
-               />
+                 className="h-0.5 rounded-full flex-1 bg-white/20 overflow-hidden"
+               >
+                 <div 
+                   className="h-full bg-white transition-all duration-100 ease-linear"
+                   style={{ 
+                     width: idx < currentPreviewIndex ? '100%' : idx === currentPreviewIndex ? `${progress}%` : '0%' 
+                   }}
+                 />
+               </div>
              ))}
            </div>
         )}
