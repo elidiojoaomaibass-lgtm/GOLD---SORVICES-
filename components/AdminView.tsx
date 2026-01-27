@@ -20,7 +20,10 @@ import {
   Bell,
   FileUp,
   MousePointer2,
-  Layers
+  FileUp,
+  MousePointer2,
+  Layers,
+  Upload
 } from 'lucide-react';
 
 interface Props {
