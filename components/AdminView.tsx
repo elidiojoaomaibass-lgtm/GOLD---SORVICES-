@@ -20,8 +20,6 @@ import {
   Bell,
   FileUp,
   MousePointer2,
-  FileUp,
-  MousePointer2,
   Layers,
   Upload
 } from 'lucide-react';
@@ -565,22 +563,20 @@ const PromoSection = ({ title, data, onSave, icon: Icon, isDarkMode }: { title: 
               <label className="text-[10px] font-black tracking-widest text-zinc-500 uppercase">Previews (.MP4) - Sequenciais</label>
               
               {[0, 1, 2].map((index) => (
-                <div key={index} className="flex gap-2">
-                  <div className="relative flex-1">
-                    <input
-                      type="text"
-                      placeholder={`URL Preview ${index + 1} (Principal)`}
-                      className="w-full pl-4 pr-4 py-4 rounded-2xl outline-none text-sm transition-all border bg-zinc-50 border-zinc-200 text-zinc-900 focus:border-violet-600 focus:bg-white"
-                      value={formVideo.previews?.[index] || ''}
-                      onChange={(e) => {
-                        const newPreviews = [...(formVideo.previews || [])];
-                        newPreviews[index] = e.target.value;
-                        setFormVideo({ ...formVideo, previews: newPreviews });
-                      }}
-                    />
-                  </div>
-                  <label className={`flex items-center justify-center w-14 rounded-2xl cursor-pointer transition-all ${isUploading ? 'bg-zinc-100 cursor-not-allowed' : 'bg-violet-600 hover:bg-violet-500 text-white shadow-lg shadow-violet-600/20 active:scale-95'}`}>
-                    {isUploading ? <div className="w-4 h-4 border-2 border-zinc-300 border-t-zinc-500 rounded-full animate-spin"/> : <Upload size={18} />}
+                <div key={index} className="relative">
+                  <input
+                    type="text"
+                    placeholder={`URL Preview ${index + 1} (Principal)`}
+                    className={`w-full border rounded-xl px-5 py-4 outline-none text-xs pr-14 ${isDarkMode ? 'bg-zinc-950 border-zinc-800 text-white focus:border-violet-600' : 'bg-white border-zinc-200 text-zinc-900 focus:border-violet-600'}`}
+                    value={formVideo.previews?.[index] || ''}
+                    onChange={(e) => {
+                      const newPreviews = [...(formVideo.previews || [])];
+                      newPreviews[index] = e.target.value;
+                      setFormVideo({ ...formVideo, previews: newPreviews });
+                    }}
+                  />
+                  <label className={`absolute right-2 top-2 p-2 bg-violet-600 text-white rounded-xl transition-all cursor-pointer hover:bg-violet-500`}>
+                    {isUploading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"/> : <Upload size={20} />}
                     <input 
                       type="file" 
                       accept="video/mp4,video/webm" 
