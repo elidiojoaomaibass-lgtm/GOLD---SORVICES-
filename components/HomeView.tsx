@@ -369,7 +369,7 @@ export const HomeView: React.FC<Props> = ({
 
       {bottomPromoCard?.isActive && (
         <section className="px-4 pt-4 pb-12">
-          <div className={`p-6 rounded-3xl border transition-all shadow-xl ${isDarkMode ? 'bg-zinc-900/40 border-zinc-800' : 'bg-white border-zinc-100'}`}>
+          <div className={`p-6 rounded-2xl border transition-all shadow-xl ${isDarkMode ? 'bg-zinc-900/40 border-zinc-800' : 'bg-white border-zinc-100'}`}>
              <div className="flex items-center gap-2 mb-3">
                <h3 className={`font-black text-sm uppercase tracking-[0.2em] ${isDarkMode ? 'text-white' : 'text-zinc-900'}`}>{bottomPromoCard.title}</h3>
              </div>
