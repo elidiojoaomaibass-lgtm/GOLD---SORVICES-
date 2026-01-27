@@ -104,7 +104,7 @@ const VideoFeedItem: React.FC<VideoPlayerProps> = ({ video, isDarkMode }) => {
         />
         
         {/* Indicadores de Progresso (Story-like) */}
-        {validPreviews.length > 1 && (
+        {isPlaying && validPreviews.length > 1 && (
            <div className="absolute top-3 left-3 right-3 flex gap-1 z-20">
              {validPreviews.map((_, idx) => (
                <div 
