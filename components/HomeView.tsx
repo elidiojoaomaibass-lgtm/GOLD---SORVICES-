@@ -13,11 +13,43 @@ const VideoFeedItem: React.FC<VideoPlayerProps> = ({ video, isDarkMode }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0);
   
   const [views, setViews] = useState(() => Math.floor(Math.random() * 800) + 150);
   const [sales, setSales] = useState(() => Math.floor(Math.random() * 120) + 45);
 
-  const videoUrl = video.previews && video.previews.length > 0 ? video.previews[0] : '';
+  // Garantir que previews seja um array válido
+  const validPreviews = Array.isArray(video.previews) 
+    ? video.previews.filter(url => url && url.length > 0) 
+    : [];
+  
+  const currentVideoUrl = validPreviews.length > 0 
+    ? validPreviews[currentPreviewIndex] 
+    : '';
+
+  useEffect(() => {
+    // Resetar índice quando o vídeo mudar
+    setCurrentPreviewIndex(0);
+  }, [video.id]);
+
+  useEffect(() => {
+    // Se mudar o índice e estiver tocando, carregar e tocar o próximo
+    if (isPlaying && videoRef.current) {
+        videoRef.current.src = currentVideoUrl;
+        videoRef.current.play().catch(() => setIsPlaying(false));
+    }
+  }, [currentPreviewIndex, currentVideoUrl]); // Removed isPlaying from deps to avoid loop
+
+  const handleVideoEnd = () => {
+    if (validPreviews.length > 1) {
+      // Avançar para o próximo vídeo
+      const nextIndex = (currentPreviewIndex + 1) % validPreviews.length;
+      setCurrentPreviewIndex(nextIndex);
+      // O useEffect acima cuidará do play
+    } else {
+      setIsPlaying(false);
+    }
+  };
 
   useEffect(() => {
     const viewInterval = setInterval(() => {
@@ -64,12 +96,28 @@ const VideoFeedItem: React.FC<VideoPlayerProps> = ({ video, isDarkMode }) => {
       >
         <video 
           ref={videoRef}
-          src={videoUrl} 
+          src={currentVideoUrl} 
           poster={video.coverUrl}
           playsInline 
           className="w-full h-full object-contain"
-          onEnded={() => setIsPlaying(false)}
+          onEnded={handleVideoEnd}
         />
+        
+        {/* Indicadores de Progresso (Story-like) */}
+        {validPreviews.length > 1 && (
+           <div className="absolute top-3 left-3 right-3 flex gap-1 z-20">
+             {validPreviews.map((_, idx) => (
+               <div 
+                 key={idx} 
+                 className={`h-0.5 rounded-full flex-1 transition-colors duration-300 ${
+                   idx === currentPreviewIndex 
+                     ? 'bg-white' 
+                     : idx < currentPreviewIndex ? 'bg-white/50' : 'bg-white/20'
+                 }`} 
+               />
+             ))}
+           </div>
+        )}
         
         {!isPlaying && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">

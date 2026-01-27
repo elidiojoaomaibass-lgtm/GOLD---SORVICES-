@@ -522,13 +522,41 @@ const PromoSection = ({ title, data, onSave, icon: Icon, isDarkMode }: { title: 
                     </div>
                   </div>
                   <div className="space-y-6">
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest italic ml-1">Preview (.mp4)</label>
-                      <div className="relative">
-                        <input type="text" placeholder="URL MP4" className={`w-full border rounded-xl px-5 py-4 outline-none text-xs pr-14 ${isDarkMode ? 'bg-zinc-950 border-zinc-800 text-white focus:border-violet-600' : 'bg-white border-zinc-200 text-zinc-900 focus:border-violet-600'}`} value={formVideo.previews?.[0] || ''} onChange={(e) => { const n = [...(formVideo.previews || [''])]; n[0] = e.target.value; setFormVideo(p => ({...p, previews: n})); }} />
-                        <label className="absolute right-2 top-2 p-2 bg-violet-600 text-white rounded-xl transition-all cursor-pointer hover:bg-violet-500"><FileUp size={20}/><input type="file" className="hidden" accept="video/*" onChange={(e) => handleFileUpload(e, 0)}/></label>
-                      </div>
-                    </div>
+                    {/* Previews (Multi-Video) */}
+            <div className="md:col-span-2 space-y-3">
+              <label className="text-[10px] font-black tracking-widest text-zinc-500 uppercase">Previews (.MP4) - Sequenciais</label>
+              
+              {[0, 1, 2].map((index) => (
+                <div key={index} className="flex gap-2">
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      placeholder={`URL Preview ${index + 1} (Principal)`}
+                      className="w-full pl-4 pr-4 py-4 rounded-2xl outline-none text-sm transition-all border bg-zinc-50 border-zinc-200 text-zinc-900 focus:border-violet-600 focus:bg-white"
+                      value={formVideo.previews?.[index] || ''}
+                      onChange={(e) => {
+                        const newPreviews = [...(formVideo.previews || [])];
+                        newPreviews[index] = e.target.value;
+                        setFormVideo({ ...formVideo, previews: newPreviews });
+                      }}
+                    />
+                  </div>
+                  <label className={`flex items-center justify-center w-14 rounded-2xl cursor-pointer transition-all ${isUploading ? 'bg-zinc-100 cursor-not-allowed' : 'bg-violet-600 hover:bg-violet-500 text-white shadow-lg shadow-violet-600/20 active:scale-95'}`}>
+                    {isUploading ? <div className="w-4 h-4 border-2 border-zinc-300 border-t-zinc-500 rounded-full animate-spin"/> : <Upload size={18} />}
+                    <input 
+                      type="file" 
+                      accept="video/mp4,video/webm" 
+                      className="hidden" 
+                      onChange={(e) => handleFileUpload(e, index)} // Passando index numérico
+                      disabled={isUploading}
+                    />
+                  </label> 
+                </div>
+              ))}
+              <p className="text-[9px] text-zinc-400 font-medium ml-2">
+                * O vídeo 1 toca primeiro. Quando acabar, toca o 2, depois o 3.
+              </p>
+            </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1">
                          <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest italic">Link Compra</label>
