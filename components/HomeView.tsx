@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Banner, VideoCard, PromoCard } from '../types';
 import { Play, ExternalLink, Send, Pause, Volume2, VolumeX, ShoppingCart, Sparkles, Eye } from 'lucide-react';
+import { Skeleton } from './Skeleton';
 
 interface VideoPlayerProps {
   video: VideoCard;
@@ -193,7 +194,43 @@ export const HomeView: React.FC<Props> = ({
 
   const validBanners = (banners || []).filter(b => b.imageUrl);
 
+  if (isLoading) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        {/* Banner Skeleton */}
+        <section className="px-4 pt-4 relative w-full">
+           <Skeleton className="w-full aspect-video rounded-3xl" isDarkMode={isDarkMode} />
+        </section>
 
+        {/* Promo Skeleton */}
+        <section className="px-4">
+           <Skeleton className="h-40 w-full rounded-3xl" isDarkMode={isDarkMode} />
+        </section>
+
+        {/* Title Skeleton */}
+        <section className="px-6 py-2 flex flex-col items-center gap-2">
+           <Skeleton className="h-8 w-48 rounded-lg" isDarkMode={isDarkMode} />
+           <Skeleton className="h-4 w-32 rounded-lg" isDarkMode={isDarkMode} />
+        </section>
+
+        {/* Video Grid Skeleton */}
+        <section className="px-4">
+          <div className="flex flex-col gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className={`p-4 rounded-2xl border ${isDarkMode ? 'border-zinc-800' : 'border-zinc-100'}`}>
+                <Skeleton className="w-full aspect-video rounded-2xl mb-4" isDarkMode={isDarkMode} />
+                <Skeleton className="h-6 w-3/4 rounded-lg mb-2" isDarkMode={isDarkMode} />
+                <div className="flex justify-between">
+                   <Skeleton className="h-4 w-1/4 rounded-lg" isDarkMode={isDarkMode} />
+                   <Skeleton className="h-4 w-1/4 rounded-lg" isDarkMode={isDarkMode} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">

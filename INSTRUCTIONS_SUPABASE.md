@@ -82,6 +82,17 @@ CREATE POLICY "Admins all banners" ON banners FOR ALL USING (auth.role() = 'auth
 CREATE POLICY "Admins all videos" ON videos FOR ALL USING (auth.role() = 'authenticated');
 CREATE POLICY "Admins all notices" ON notices FOR ALL USING (auth.role() = 'authenticated');
 CREATE POLICY "Admins all promos" ON promos FOR ALL USING (auth.role() = 'authenticated');
+
+-- [AUTO-FIX] Schema Drift Patch
+-- Run this if you see errors like "Could not find column 'button_text'..."
+ALTER TABLE banners ADD COLUMN IF NOT EXISTS button_text TEXT DEFAULT 'Saiba Mais';
+ALTER TABLE banners ADD COLUMN IF NOT EXISTS link TEXT DEFAULT '';
+
+ALTER TABLE videos ADD COLUMN IF NOT EXISTS title TEXT DEFAULT '';
+ALTER TABLE videos ADD COLUMN IF NOT EXISTS telegram_link TEXT DEFAULT '';
+ALTER TABLE videos ADD COLUMN IF NOT EXISTS telegram_button_text TEXT DEFAULT 'DM TELEGRAM';
+
+NOTIFY pgrst, 'reload config';
 ```
 
 ## 2. Storage Buckets
