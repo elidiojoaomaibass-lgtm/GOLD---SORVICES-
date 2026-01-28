@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Mail, Lock, LogIn, ChevronLeft, ShieldAlert, Shield } from 'lucide-react';
+import { Mail, Lock, LogIn, ChevronLeft, ShieldAlert, Shield, Eye, EyeOff } from 'lucide-react';
 import { authService } from '../services/auth';
 
 interface Props {
@@ -16,6 +16,7 @@ export const LoginView: React.FC<Props> = ({ onLoginSuccess, onBack, isDarkMode 
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showTwoFactor, setShowTwoFactor] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +25,7 @@ export const LoginView: React.FC<Props> = ({ onLoginSuccess, onBack, isDarkMode 
 
     try {
       const result = await authService.loginStep1(email, password);
-      
+
       if (result.error) {
         setError(result.error);
         setIsLoading(false);
@@ -55,7 +56,7 @@ export const LoginView: React.FC<Props> = ({ onLoginSuccess, onBack, isDarkMode 
 
     try {
       const { user, error: loginError } = await authService.loginStep2(email, password, twoFactorCode);
-      
+
       if (loginError || !user) {
         setError(loginError || 'Código inválido');
         setIsLoading(false);
@@ -79,7 +80,7 @@ export const LoginView: React.FC<Props> = ({ onLoginSuccess, onBack, isDarkMode 
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center p-6 animate-in fade-in zoom-in duration-500">
       <div className={`w-full p-8 rounded-[2.5rem] border transition-all shadow-2xl ${isDarkMode ? 'bg-zinc-800/30 border-zinc-800 shadow-black/50' : 'bg-white border-zinc-100 shadow-zinc-200'}`}>
-        
+
         {!showTwoFactor ? (
           /* TELA DE LOGIN */
           <>
@@ -100,8 +101,8 @@ export const LoginView: React.FC<Props> = ({ onLoginSuccess, onBack, isDarkMode 
                 <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">E-mail</label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
-                  <input 
-                    type="email" 
+                  <input
+                    type="email"
                     required
                     placeholder="admin@gmail.com"
                     className={`w-full pl-11 pr-4 py-4 rounded-2xl outline-none text-sm transition-all border ${isDarkMode ? 'bg-zinc-900 border-zinc-800 text-white focus:border-violet-600' : 'bg-zinc-50 border-zinc-200 text-zinc-900 focus:border-violet-600'}`}
@@ -116,15 +117,23 @@ export const LoginView: React.FC<Props> = ({ onLoginSuccess, onBack, isDarkMode 
                 <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Password</label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
-                  <input 
-                    type="password" 
+                  <input
+                    type={showPassword ? "text" : "password"}
                     required
                     placeholder="••••••••"
-                    className={`w-full pl-11 pr-4 py-4 rounded-2xl outline-none text-sm transition-all border ${isDarkMode ? 'bg-zinc-900 border-zinc-800 text-white focus:border-violet-600' : 'bg-zinc-50 border-zinc-200 text-zinc-900 focus:border-violet-600'}`}
+                    className={`w-full pl-11 pr-12 py-4 rounded-2xl outline-none text-sm transition-all border ${isDarkMode ? 'bg-zinc-900 border-zinc-800 text-white focus:border-violet-600' : 'bg-zinc-50 border-zinc-200 text-zinc-900 focus:border-violet-600'}`}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={isLoading}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-violet-600 transition-colors p-1"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
                 </div>
               </div>
 
@@ -135,8 +144,8 @@ export const LoginView: React.FC<Props> = ({ onLoginSuccess, onBack, isDarkMode 
                 </div>
               )}
 
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 disabled={isLoading}
                 className="w-full py-4 bg-violet-600 hover:bg-violet-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-violet-600/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
               >
@@ -151,7 +160,7 @@ export const LoginView: React.FC<Props> = ({ onLoginSuccess, onBack, isDarkMode 
               </button>
             </form>
 
-            <button 
+            <button
               onClick={onBack}
               className={`w-full mt-4 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-[0.98] flex items-center justify-center gap-2 ${isDarkMode ? 'text-zinc-500 hover:text-zinc-300' : 'text-zinc-400 hover:text-zinc-600'}`}
             >
@@ -179,8 +188,8 @@ export const LoginView: React.FC<Props> = ({ onLoginSuccess, onBack, isDarkMode 
                 <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Código de 6 Dígitos</label>
                 <div className="relative">
                   <Shield className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     required
                     maxLength={6}
                     placeholder="000000"
@@ -206,8 +215,8 @@ export const LoginView: React.FC<Props> = ({ onLoginSuccess, onBack, isDarkMode 
                 </div>
               )}
 
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 disabled={isLoading || twoFactorCode.length !== 6}
                 className="w-full py-4 bg-green-600 hover:bg-green-500 disabled:bg-zinc-600 disabled:cursor-not-allowed text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-green-600/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
               >
@@ -222,7 +231,7 @@ export const LoginView: React.FC<Props> = ({ onLoginSuccess, onBack, isDarkMode 
               </button>
             </form>
 
-            <button 
+            <button
               onClick={handleBackToLogin}
               disabled={isLoading}
               className={`w-full mt-4 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-[0.98] flex items-center justify-center gap-2 ${isDarkMode ? 'text-zinc-500 hover:text-zinc-300' : 'text-zinc-400 hover:text-zinc-600'}`}
