@@ -597,7 +597,7 @@ export const AdminView: React.FC<Props> = ({
                             {isUploading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Upload size={20} />}
                             <input
                               type="file"
-                              accept="video/mp4,video/webm,image/*"
+                              accept="video/*,image/*"
                               className="hidden"
                               onChange={(e) => handleFileUpload(e, index)} // Passando index numérico
                               disabled={isUploading}

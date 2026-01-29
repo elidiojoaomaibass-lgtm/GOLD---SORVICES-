@@ -42,18 +42,30 @@ export const uploadService = {
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `${fileName}`;
 
+      console.log(`[Storage] Iniciando upload para bucket "${bucket}":`, fileName);
+
       // Upload do arquivo
       const { data, error: uploadError } = await supabase.storage
         .from(bucket)
         .upload(filePath, file, {
           cacheControl: '3600',
           upsert: false,
-          contentType: file.type // Essencial para o navegador renderizar na tag IMG
+          contentType: file.type || 'application/octet-stream'
         });
 
       if (uploadError) {
-        console.error('Upload error:', uploadError);
-        return { url: null, error: 'Erro ao fazer upload do arquivo' };
+        console.error('Upload error detail:', uploadError);
+        let errorMessage = 'Erro ao fazer upload';
+
+        if (uploadError.message === 'Bucket not found') {
+          errorMessage = `Bucket "${bucket}" não encontrado no Supabase.`;
+        } else if (uploadError.message.includes('Payload too large')) {
+          errorMessage = 'Arquivo muito grande para o limite do Supabase.';
+        } else {
+          errorMessage = `Erro Supabase: ${uploadError.message}`;
+        }
+
+        return { url: null, error: errorMessage };
       }
 
       // Obter URL pública do arquivo
@@ -61,14 +73,16 @@ export const uploadService = {
         .from(bucket)
         .getPublicUrl(filePath);
 
+      console.log(`[Storage] Upload concluído com sucesso:`, publicUrl);
+
       return {
         url: publicUrl,
         error: null,
         path: filePath
       };
     } catch (err: any) {
-      console.error('Storage error:', err);
-      return { url: null, error: err.message };
+      console.error('Storage catch error:', err);
+      return { url: null, error: `Erro inesperado: ${err.message}` };
     }
   },
 
@@ -147,9 +161,21 @@ export const uploadService = {
    */
   validateFileType: (file: File, allowedTypes: string[]): { valid: boolean; error: string | null } => {
     if (!allowedTypes.includes(file.type)) {
+      // Tentar validar pela extensão se o mime type for vazio ou estranho
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      const videoExts = ['mp4', 'webm', 'mov'];
+      const imageExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
+      if (allowedTypes.some(t => t.startsWith('video/')) && ext && videoExts.includes(ext)) {
+        return { valid: true, error: null };
+      }
+      if (allowedTypes.some(t => t.startsWith('image/')) && ext && imageExts.includes(ext)) {
+        return { valid: true, error: null };
+      }
+
       return {
         valid: false,
-        error: `Tipo de arquivo não permitido. Aceitos: ${allowedTypes.join(', ')}`
+        error: `Tipo de arquivo não permitido (${file.type || 'desconhecido'}). Aceitos: ${allowedTypes.join(', ')}`
       };
     }
     return { valid: true, error: null };
@@ -163,7 +189,7 @@ export const uploadService = {
     if (file.size > maxSizeBytes) {
       return {
         valid: false,
-        error: `Arquivo muito grande. Máximo: ${maxSizeMB}MB`
+        error: `Arquivo muito grande (${(file.size / 1024 / 1024).toFixed(1)}MB). Máximo permitido: ${maxSizeMB}MB`
       };
     }
     return { valid: true, error: null };
@@ -194,11 +220,13 @@ export const uploadService = {
     const typeValidation = uploadService.validateFileType(file, [
       'video/mp4',
       'video/webm',
-      'video/quicktime' // Suporte para .mov (iPhone/Mac)
+      'video/quicktime',
+      'video/x-matroska', // .mkv
+      'video/avi'
     ]);
     if (!typeValidation.valid) return typeValidation;
 
-    // Validar tamanho (100MB)
-    return uploadService.validateFileSize(file, 100);
+    // Validar tamanho (500MB)
+    return uploadService.validateFileSize(file, 500);
   }
 };
