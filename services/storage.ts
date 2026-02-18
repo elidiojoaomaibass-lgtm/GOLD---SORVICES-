@@ -326,7 +326,7 @@ export const storageService = {
         .from('promos')
         .select('*')
         .eq('id', 'top')
-        .single();
+        .maybeSingle();
 
       if (!error && data) {
         return mapPromoFromDb(data);
@@ -357,13 +357,12 @@ export const storageService = {
   },
 
   getBottomPromoCard: async (): Promise<PromoCard> => {
-    // Tenta Supabase PRIMEIRO
     if (supabase) {
       const { data, error } = await supabase
         .from('promos')
         .select('*')
         .eq('id', 'bottom')
-        .single();
+        .maybeSingle();
 
       if (!error && data) {
         return mapPromoFromDb(data);
