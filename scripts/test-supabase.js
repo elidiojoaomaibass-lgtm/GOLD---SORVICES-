@@ -29,8 +29,8 @@ lines.forEach(line => {
   }
 });
 
-const SUPABASE_URL = config.SUPABASE_URL;
-const SUPABASE_ANON_KEY = config.SUPABASE_ANON_KEY;
+const SUPABASE_URL = config.SUPABASE_URL || config.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = config.SUPABASE_ANON_KEY || config.VITE_SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   console.log('❌ Variáveis do Supabase não configuradas!\n');

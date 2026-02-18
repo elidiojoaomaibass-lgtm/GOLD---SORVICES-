@@ -55,9 +55,10 @@ if (!config.GEMINI_API_KEY) {
 }
 
 // SUPABASE_URL
-if (!config.SUPABASE_URL) {
+const SUPABASE_URL = config.VITE_SUPABASE_URL || config.SUPABASE_URL;
+if (!SUPABASE_URL) {
   console.log('ℹ️  SUPABASE_URL: Não configurada (usando localStorage como fallback)');
-} else if (config.SUPABASE_URL.includes('your-project') || !config.SUPABASE_URL.includes('supabase.co')) {
+} else if (SUPABASE_URL.includes('your-project') || !SUPABASE_URL.includes('supabase.co')) {
   console.log('⚠️  SUPABASE_URL: Formato inválido (deve ser https://seu-projeto.supabase.co)');
   hasWarnings = true;
 } else {
@@ -65,9 +66,10 @@ if (!config.SUPABASE_URL) {
 }
 
 // SUPABASE_ANON_KEY
-if (!config.SUPABASE_ANON_KEY) {
+const SUPABASE_ANON_KEY = config.VITE_SUPABASE_ANON_KEY || config.SUPABASE_ANON_KEY;
+if (!SUPABASE_ANON_KEY) {
   console.log('ℹ️  SUPABASE_ANON_KEY: Não configurada (usando localStorage como fallback)');
-} else if (config.SUPABASE_ANON_KEY.includes('your-anon-key') || config.SUPABASE_ANON_KEY.length < 100) {
+} else if (SUPABASE_ANON_KEY.includes('your-anon-key') || SUPABASE_ANON_KEY.length < 100) {
   console.log('⚠️  SUPABASE_ANON_KEY: Formato inválido (chave muito curta ou placeholder)');
   hasWarnings = true;
 } else {
@@ -77,8 +79,8 @@ if (!config.SUPABASE_ANON_KEY) {
 console.log('\n═══════════════════════════════════════════════════\n');
 
 // Validação de Supabase
-const hasSupabaseUrl = config.SUPABASE_URL && !config.SUPABASE_URL.includes('your-project');
-const hasSupabaseKey = config.SUPABASE_ANON_KEY && !config.SUPABASE_ANON_KEY.includes('your-anon-key');
+const hasSupabaseUrl = SUPABASE_URL && !SUPABASE_URL.includes('your-project');
+const hasSupabaseKey = SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.includes('your-anon-key');
 
 if (hasSupabaseUrl && hasSupabaseKey) {
   console.log('🗄️  Modo: SUPABASE (Dados sincronizados na nuvem)');
