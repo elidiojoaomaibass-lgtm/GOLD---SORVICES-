@@ -329,28 +329,35 @@ button {
 
 @media (max-width: 480px) {
   .floating-notification {
-    top: 70px;
-    right: 10px;
-    left: 10px;
-    max-width: calc(100% - 20px);
-    padding: 0.5rem 0.75rem;
-    gap: 10px;
-    border-radius: 0.75rem;
+    top: 12px;
+    right: 12px;
+    left: auto;
+    max-width: 210px;
+    padding: 0.4rem 0.6rem;
+    gap: 8px;
+    border-radius: 0.6rem;
+    border-width: 1.5px;
   }
 
   .notification-icon {
-    padding: 6px !important;
+    padding: 4px !important;
+  }
+
+  .notification-icon svg {
+    width: 14px !important;
+    height: 14px !important;
   }
 
   .notification-title {
-    font-size: 0.65rem !important;
+    font-size: 0.6rem !important;
   }
 
   .notification-name {
-    font-size: 0.8rem !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
   }
 
   .notification-text {
-    font-size: 0.7rem !important;
+    font-size: 0.65rem !important;
   }
 }
