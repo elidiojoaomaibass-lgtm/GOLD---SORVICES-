@@ -5,15 +5,10 @@ import {
   ShieldCheck,
   Wallet,
   Zap,
-  Copy,
-  CheckCircle2,
-  Upload,
-  Sparkles,
   MessageCircle,
   BookOpen,
   Menu,
-  Coins,
-  Banknote
+  Coins
 } from 'lucide-react';
 
 interface LoanOption {
