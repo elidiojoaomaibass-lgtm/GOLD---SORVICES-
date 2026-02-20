@@ -189,15 +189,16 @@ function App() {
               key={opt.id}
               className={`option-item ${selectedOption?.id === opt.id ? 'selected' : ''}`}
               onClick={() => setSelectedOption(opt)}
-              whileHover={{ x: 5 }}
+              whileHover={{ x: 8 }}
               whileTap={{ scale: 0.98 }}
             >
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <span className="badge-number">{opt.id}</span>
-                <span style={{ fontWeight: 600 }}>PAGA {opt.fee}</span>
+                <span style={{ fontWeight: 800, fontSize: '1.2rem', letterSpacing: '0.5px', color: '#ffffff' }}>PAGA {opt.fee}</span>
               </div>
-              <div className="text-gold" style={{ fontSize: '0.875rem', fontWeight: 500 }}>
-                👉 RECEBE {opt.receive}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#ffffff', fontSize: '1rem', fontWeight: 500 }}>
+                <span style={{ fontSize: '1.4rem' }}>👉</span>
+                <span style={{ opacity: 0.95 }}>RECEBE {opt.receive}</span>
               </div>
             </motion.div>
           ))}

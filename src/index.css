@@ -192,31 +192,33 @@ button {
 .option-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
+  gap: 1.25rem;
+  margin-top: 2rem;
 }
 
 .option-item {
-  background-color: rgba(10, 33, 24, 0.8);
-  border: 1px solid var(--border);
-  padding: 1rem;
-  border-radius: 0.5rem;
+  background-color: #121815;
+  border: none;
+  border-left: 10px solid #eab308;
+  padding: 1.25rem 1.75rem;
+  border-radius: 2rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 0.5rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .option-item:hover {
-  border-color: var(--gold);
-  background-color: var(--secondary);
+  transform: translateX(8px);
+  background-color: #232a27;
 }
 
 .option-item.selected {
-  border-color: var(--gold);
-  background-color: var(--secondary);
-  box-shadow: 0 0 10px rgba(234, 179, 8, 0.2);
+  background-color: #232a27;
+  box-shadow: 0 0 20px rgba(234, 179, 8, 0.15);
 }
 
 .instruction-box {
@@ -264,17 +266,17 @@ button {
 }
 
 .badge-number {
-  background-color: var(--gold);
-  color: var(--background);
-  width: 1.5rem;
-  height: 1.5rem;
+  background-color: #2563eb;
+  color: white;
+  width: 2rem;
+  height: 2rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   font-weight: 800;
-  font-size: 0.75rem;
-  margin-right: 0.75rem;
+  font-size: 0.9rem;
+  margin-right: 1rem;
 }
 
 .upload-area {
