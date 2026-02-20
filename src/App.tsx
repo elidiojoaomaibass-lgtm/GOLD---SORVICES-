@@ -90,33 +90,18 @@ function App() {
       <AnimatePresence>
         {notification && (
           <motion.div
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 100 }}
-            style={{
-              position: 'fixed',
-              top: '80px',
-              right: '20px',
-              zIndex: 1000,
-              backgroundColor: 'rgba(10, 33, 24, 0.95)',
-              border: '2px solid #eab308',
-              borderRadius: '1rem',
-              padding: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
-              maxWidth: '300px',
-              backdropFilter: 'blur(10px)'
-            }}
+            initial={{ opacity: 0, scale: 0.8, x: 50 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 0.8, x: 50 }}
+            className="floating-notification"
           >
-            <div style={{ backgroundColor: '#eab308', borderRadius: '50%', padding: '8px', display: 'flex' }}>
+            <div className="notification-icon" style={{ backgroundColor: '#eab308', borderRadius: '50%', padding: '8px', display: 'flex' }}>
               <Zap size={20} color="#04160f" />
             </div>
             <div>
-              <p style={{ fontSize: '0.75rem', color: '#eab308', fontWeight: 700, margin: 0 }}>APROVADO AGORA!</p>
-              <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'white', margin: '2px 0' }}>{notification.name}</p>
-              <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: 0 }}>Recebeu {notification.amount} MT</p>
+              <p className="notification-title" style={{ fontSize: '0.75rem', color: '#eab308', fontWeight: 700, margin: 0 }}>APROVADO AGORA!</p>
+              <p className="notification-name" style={{ fontSize: '0.9rem', fontWeight: 600, color: 'white', margin: '2px 0' }}>{notification.name}</p>
+              <p className="notification-text" style={{ fontSize: '0.8rem', color: '#94a3b8', margin: 0 }}>Recebeu {notification.amount} MT</p>
             </div>
           </motion.div>
         )}
