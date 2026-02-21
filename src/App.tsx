@@ -85,7 +85,7 @@ function App() {
   };
 
   return (
-    <div style={{ backgroundColor: '#ff0000', minHeight: '100vh', color: '#fcfbf8', paddingBottom: '2rem', overflowX: 'hidden' }}>
+    <div style={{ backgroundColor: '#04160f', minHeight: '100vh', color: '#fcfbf8', paddingBottom: '2rem', overflowX: 'hidden' }}>
       {/* Floating Notification */}
       <AnimatePresence>
         {notification && (
