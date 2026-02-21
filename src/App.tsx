@@ -20,18 +20,18 @@ interface LoanOption {
 }
 
 const LOAN_OPTIONS: LoanOption[] = [
-  { id: 1, fee: "516 MT", receive: "6.000–8.000 MT", period: "3 meses" },
-  { id: 2, fee: "1099 MT", receive: "12.000–15.000 MT", period: "4 meses" },
-  { id: 3, fee: "1693 MT", receive: "25.000–37.000 MT", period: "5 meses" },
-  { id: 4, fee: "1903 MT", receive: "50.000–64.000 MT", period: "6 meses" },
-  { id: 5, fee: "2109 MT", receive: "68.000–86.000 MT", period: "7 meses" },
-  { id: 6, fee: "2601 MT", receive: "87.000–100.000 MT", period: "8 meses" },
-  { id: 7, fee: "2903 MT", receive: "120.000–135.000 MT", period: "9 meses" },
-  { id: 8, fee: "3016 MT", receive: "136.000–167.000 MT", period: "10 meses" },
-  { id: 9, fee: "3801 MT", receive: "168.000–189.000 MT", period: "11 meses" },
-  { id: 10, fee: "4016 MT", receive: "190.000–200.000 MT", period: "12 meses" },
-  { id: 11, fee: "4500 MT", receive: "215.000–240.000 MT", period: "13 meses" },
-  { id: 12, fee: "5000 MT", receive: "250.000–300.000 MT", period: "14 meses" },
+  { id: 1, fee: "516 MT", receive: "5.000–7.000 MT", period: "3 meses" },
+  { id: 2, fee: "888 MT", receive: "8.000–10.000 MT", period: "4 meses" },
+  { id: 3, fee: "1099 MT", receive: "12.000–15.000 MT", period: "5 meses" },
+  { id: 4, fee: "1257 MT", receive: "20.000–23.000 MT", period: "6 meses" },
+  { id: 5, fee: "1693 MT", receive: "25.000–37.000 MT", period: "7 meses" },
+  { id: 6, fee: "1903 MT", receive: "50.000–64.000 MT", period: "8 meses" },
+  { id: 7, fee: "2109 MT", receive: "68.000–86.000 MT", period: "9 meses" },
+  { id: 8, fee: "2601 MT", receive: "87.000–100.000 MT", period: "10 meses" },
+  { id: 9, fee: "2903 MT", receive: "120.000–135.000 MT", period: "11 meses" },
+  { id: 10, fee: "3016 MT", receive: "136.000–167.000 MT", period: "12 meses" },
+  { id: 11, fee: "3801 MT", receive: "168.000–189.000 MT", period: "13 meses" },
+  { id: 12, fee: "4016 MT", receive: "190.000–200.000 MT", period: "14 meses" },
 ];
 
 const containerVariants = {
