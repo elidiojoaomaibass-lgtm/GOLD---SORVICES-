@@ -196,7 +196,7 @@ function App() {
                 <span style={{ fontWeight: 700, fontSize: '1.1rem', color: '#ffffff' }}>PAGA {opt.fee}</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#ffffff', fontSize: '1rem' }}>
-                <span style={{ fontSize: '1.2rem' }}>�</span>
+                <span style={{ fontSize: '1.2rem' }}>👉</span>
                 <span style={{ fontWeight: 500 }}>RECEBE {opt.receive}</span>
               </div>
             </motion.div>

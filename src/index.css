@@ -197,13 +197,13 @@ button {
 }
 
 .option-item {
-  background-color: #121815;
+  background-color: #1a221f;
   border: none;
-  padding: 1.25rem 1.5rem 1.25rem 2.5rem;
-  border-radius: 1.5rem;
+  padding: 1.25rem 1.25rem 1.25rem 2.5rem;
+  border-radius: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
@@ -215,12 +215,12 @@ button {
 .option-item::before {
   content: "";
   position: absolute;
-  left: 0.75rem;
+  left: 0;
   top: 15%;
   height: 70%;
-  width: 8px;
+  width: 6px;
   background-color: #eab308;
-  border-radius: 10px;
+  border-radius: 0 4px 4px 0;
 }
 
 .option-item:hover {
