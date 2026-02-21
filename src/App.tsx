@@ -28,6 +28,8 @@ const LOAN_OPTIONS: LoanOption[] = [
   { id: 8, fee: "3016 MT", receive: "136.000–167.000 MT", period: "10 meses" },
   { id: 9, fee: "3801 MT", receive: "168.000–189.000 MT", period: "11 meses" },
   { id: 10, fee: "4016 MT", receive: "190.000–200.000 MT", period: "12 meses" },
+  { id: 11, fee: "4500 MT", receive: "215.000–240.000 MT", period: "13 meses" },
+  { id: 12, fee: "5000 MT", receive: "250.000–300.000 MT", period: "14 meses" },
 ];
 
 const containerVariants = {
