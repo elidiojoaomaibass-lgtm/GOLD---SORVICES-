@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+// VERSION: GOLD_SERVICES_V2_FINAL_SYNC
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Clock,
