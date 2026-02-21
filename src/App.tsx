@@ -61,6 +61,8 @@ function App() {
   const [fileName, setFileName] = useState<string>("");
   const [notification, setNotification] = useState<{ name: string; amount: string } | null>(null);
 
+  const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
+
   useEffect(() => {
     const interval = setInterval(() => {
       const randomName = RANDOM_NAMES[Math.floor(Math.random() * RANDOM_NAMES.length)];
@@ -75,7 +77,8 @@ function App() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    alert('Número copiado com sucesso');
+    setCopiedNumber(text);
+    setTimeout(() => setCopiedNumber(null), 3000);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -324,16 +327,29 @@ function App() {
               <span role="img" aria-label="money">💰</span>
               <span style={{ fontWeight: 700, color: '#ff4d4d', fontSize: '1.25rem' }}>M-Pesa</span>
             </div>
-            <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '1.25rem', color: 'white' }}>Número: </span>
-              <span style={{ fontWeight: 800, fontSize: '1.75rem', color: 'white' }}>855675443</span>
-              <button
-                className="copy-btn"
-                onClick={(e) => { e.stopPropagation(); copyToClipboard('855675443'); }}
-                style={{ backgroundColor: '#f59e0b', color: '#04160f', fontWeight: 700, borderRadius: '8px', padding: '6px 14px', fontSize: '0.875rem' }}
-              >
-                📋 Copiar
-              </button>
+            <div style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flexWrap: 'nowrap' }}>
+                <span style={{ fontSize: '1.1rem', color: 'white' }}>855675443</span>
+                <button
+                  className="copy-btn"
+                  onClick={(e) => { e.stopPropagation(); copyToClipboard('855675443'); }}
+                  style={{ backgroundColor: '#f59e0b', color: '#04160f', fontWeight: 800, borderRadius: '6px', padding: '4px 10px', fontSize: '0.7rem' }}
+                >
+                  COPIAR
+                </button>
+              </div>
+              <AnimatePresence>
+                {copiedNumber === '855675443' && (
+                  <motion.span
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    style={{ color: '#22c55e', fontSize: '0.85rem', fontWeight: 600 }}
+                  >
+                    Número copiado com sucesso
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </div>
             <div style={{ fontSize: '1.25rem', color: 'white', opacity: 0.9 }}>
               Nome: ISAIAS AURELIO SIMBINE
@@ -346,16 +362,29 @@ function App() {
               <span role="img" aria-label="money-bag">💰</span>
               <span style={{ fontWeight: 700, color: '#eab308', fontSize: '1.25rem' }}>E-Mola</span>
             </div>
-            <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '1.25rem', color: 'white' }}>Número: </span>
-              <span style={{ fontWeight: 800, fontSize: '1.75rem', color: 'white' }}>865937375</span>
-              <button
-                className="copy-btn"
-                onClick={(e) => { e.stopPropagation(); copyToClipboard('865937375'); }}
-                style={{ backgroundColor: '#f59e0b', color: '#04160f', fontWeight: 700, borderRadius: '8px', padding: '6px 14px', fontSize: '0.875rem' }}
-              >
-                📋 Copiar
-              </button>
+            <div style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flexWrap: 'nowrap' }}>
+                <span style={{ fontSize: '1.1rem', color: 'white' }}>865937375</span>
+                <button
+                  className="copy-btn"
+                  onClick={(e) => { e.stopPropagation(); copyToClipboard('865937375'); }}
+                  style={{ backgroundColor: '#f59e0b', color: '#04160f', fontWeight: 800, borderRadius: '6px', padding: '4px 10px', fontSize: '0.7rem' }}
+                >
+                  COPIAR
+                </button>
+              </div>
+              <AnimatePresence>
+                {copiedNumber === '865937375' && (
+                  <motion.span
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    style={{ color: '#22c55e', fontSize: '0.85rem', fontWeight: 600 }}
+                  >
+                    Número copiado com sucesso
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </div>
             <div style={{ fontSize: '1.25rem', color: 'white', opacity: 0.9 }}>
               Nome: ISAIAS AURELIO SIMBINE
