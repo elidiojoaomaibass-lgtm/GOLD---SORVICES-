@@ -192,13 +192,13 @@ function App() {
               whileHover={{ x: 5 }}
               whileTap={{ scale: 0.98 }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span className="badge-number">{opt.id}</span>
-                <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#ffffff', letterSpacing: '0.5px' }}>PAGA {opt.fee}</span>
+                <span style={{ fontWeight: 800, fontSize: '1rem', color: '#ffffff', letterSpacing: '0.5px' }}>PAGA {opt.fee}</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#ffffff', fontSize: '1.05rem', paddingLeft: '2px' }}>
-                <span style={{ fontSize: '1.3rem', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }}>👉</span>
-                <span style={{ fontWeight: 600, opacity: 0.95 }}>RECEBE {opt.receive}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#ffffff', fontSize: '0.9rem', paddingLeft: '2px' }}>
+                <span style={{ fontSize: '1.1rem' }}>👉</span>
+                <span style={{ fontWeight: 600, opacity: 0.9 }}>RECEBE {opt.receive}</span>
               </div>
             </motion.div>
           ))}
