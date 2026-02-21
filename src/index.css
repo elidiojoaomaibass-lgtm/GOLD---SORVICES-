@@ -197,18 +197,16 @@ button {
 }
 
 .option-item {
-  background-color: #121815;
-  border: none;
-  border-left: 10px solid #eab308;
-  padding: 1.25rem 1.75rem;
-  border-radius: 2rem;
+  background-color: #0d2b1f;
+  border: 1px solid rgba(234, 179, 8, 0.4);
+  padding: 0.85rem 1.25rem;
+  border-radius: 0.85rem;
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.3s ease;
   position: relative;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .option-item:hover {

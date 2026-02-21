@@ -189,16 +189,16 @@ function App() {
               key={opt.id}
               className={`option-item ${selectedOption?.id === opt.id ? 'selected' : ''}`}
               onClick={() => setSelectedOption(opt)}
-              whileHover={{ x: 8 }}
+              whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
             >
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span className="badge-number">{opt.id}</span>
-                <span style={{ fontWeight: 800, fontSize: '1.2rem', letterSpacing: '0.5px', color: '#ffffff' }}>PAGA {opt.fee}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span className="badge-number" style={{ backgroundColor: '#eab308', color: '#04160f', margin: 0, width: '24px', height: '24px', borderRadius: '4px', fontSize: '0.8rem' }}>{opt.id}</span>
+                <span style={{ fontWeight: 700, fontSize: '1rem', color: '#ffffff' }}>PAGA {opt.fee}</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#ffffff', fontSize: '1rem', fontWeight: 500 }}>
-                <span style={{ fontSize: '1.4rem' }}>👉</span>
-                <span style={{ opacity: 0.95 }}>RECEBE {opt.receive}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#eab308', fontSize: '0.95rem', fontWeight: 700 }}>
+                <span style={{ fontSize: '1.1rem' }}>👉</span>
+                <span>RECEBE {opt.receive}</span>
               </div>
             </motion.div>
           ))}
