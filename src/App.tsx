@@ -204,9 +204,6 @@ function App() {
               </div>
             </motion.div>
           ))}
-          <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-            <span className="url-pill">goldservices.co.mz</span>
-          </div>
         </motion.div>
 
         {/* Selected Option Detail Panel (ALWAYS VISIBLE) */}
