@@ -146,7 +146,7 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsSidebarOpen(false)}
-              style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.7)', zindex: 2000, backdropFilter: 'blur(4px)' }}
+              style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.7)', zIndex: 2000, backdropFilter: 'blur(4px)' }}
             />
             <motion.div
               initial={{ x: '100%' }}
@@ -391,71 +391,75 @@ function App() {
           style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginTop: '2rem' }}
         >
           {/* M-Pesa Card */}
-          <div className="card" style={{ textAlign: 'center', padding: '2rem', marginBottom: '0' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '1.5rem' }}>
+          <div className="card" style={{ textAlign: 'center', padding: '1.5rem', marginBottom: '0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '1.25rem' }}>
               <span role="img" aria-label="money">💰</span>
-              <span style={{ fontWeight: 700, color: '#ff4d4d', fontSize: '1.25rem' }}>M-Pesa</span>
+              <span style={{ fontWeight: 700, color: '#f87171', fontSize: '1.2rem' }}>M-Pesa</span>
             </div>
-            <div style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flexWrap: 'nowrap' }}>
-                <span style={{ fontSize: '1.1rem', color: 'white' }}>855675443</span>
-                <button
-                  className="copy-btn"
-                  onClick={(e) => { e.stopPropagation(); copyToClipboard('855675443'); }}
-                  style={{ backgroundColor: '#f59e0b', color: '#04160f', fontWeight: 800, borderRadius: '6px', padding: '4px 10px', fontSize: '0.7rem' }}
+
+            <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flexWrap: 'nowrap' }}>
+              <span style={{ fontSize: '1.2rem', color: 'white' }}>Número: </span>
+              <span style={{ fontWeight: 800, fontSize: '1.4rem', color: 'white' }}>855675443</span>
+              <button
+                className="copy-btn"
+                onClick={(e) => { e.stopPropagation(); copyToClipboard('855675443'); }}
+                style={{ backgroundColor: '#f59e0b', color: '#000', fontWeight: 700, borderRadius: '4px', padding: '2px 8px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
+                📋 <span style={{ fontSize: '0.7rem' }}>Copiar</span>
+              </button>
+            </div>
+
+            <AnimatePresence>
+              {copiedNumber === '855675443' && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  style={{ color: '#22c55e', fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.5rem' }}
                 >
-                  COPIAR
-                </button>
-              </div>
-              <AnimatePresence>
-                {copiedNumber === '855675443' && (
-                  <motion.span
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    style={{ color: '#22c55e', fontSize: '0.85rem', fontWeight: 600 }}
-                  >
-                    Número copiado com sucesso
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </div>
-            <div style={{ fontSize: '0.85rem', color: 'white', opacity: 0.9, whiteSpace: 'nowrap' }}>
+                  Número copiado com sucesso
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div style={{ fontSize: '1.1rem', color: 'white', opacity: 0.9 }}>
               Nome: ISAIAS AURELIO SIMBINE
             </div>
           </div>
 
           {/* E-Mola Card */}
-          <div className="card" style={{ textAlign: 'center', padding: '2rem', marginBottom: '0' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '1.5rem' }}>
+          <div className="card" style={{ textAlign: 'center', padding: '1.5rem', marginBottom: '0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '1.25rem' }}>
               <span role="img" aria-label="money-bag">💰</span>
-              <span style={{ fontWeight: 700, color: '#eab308', fontSize: '1.25rem' }}>E-Mola</span>
+              <span style={{ fontWeight: 700, color: '#fb923c', fontSize: '1.2rem' }}>E-Mola</span>
             </div>
-            <div style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flexWrap: 'nowrap' }}>
-                <span style={{ fontSize: '1.1rem', color: 'white' }}>865937375</span>
-                <button
-                  className="copy-btn"
-                  onClick={(e) => { e.stopPropagation(); copyToClipboard('865937375'); }}
-                  style={{ backgroundColor: '#f59e0b', color: '#04160f', fontWeight: 800, borderRadius: '6px', padding: '4px 10px', fontSize: '0.7rem' }}
+
+            <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flexWrap: 'nowrap' }}>
+              <span style={{ fontSize: '1.2rem', color: 'white' }}>Número: </span>
+              <span style={{ fontWeight: 800, fontSize: '1.4rem', color: 'white' }}>865937375</span>
+              <button
+                className="copy-btn"
+                onClick={(e) => { e.stopPropagation(); copyToClipboard('865937375'); }}
+                style={{ backgroundColor: '#f59e0b', color: '#000', fontWeight: 700, borderRadius: '4px', padding: '2px 8px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
+                📋 <span style={{ fontSize: '0.7rem' }}>Copiar</span>
+              </button>
+            </div>
+
+            <AnimatePresence>
+              {copiedNumber === '865937375' && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  style={{ color: '#22c55e', fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.5rem' }}
                 >
-                  COPIAR
-                </button>
-              </div>
-              <AnimatePresence>
-                {copiedNumber === '865937375' && (
-                  <motion.span
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    style={{ color: '#22c55e', fontSize: '0.85rem', fontWeight: 600 }}
-                  >
-                    Número copiado com sucesso
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </div>
-            <div style={{ fontSize: '0.85rem', color: 'white', opacity: 0.9, whiteSpace: 'nowrap' }}>
+                  Número copiado com sucesso
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div style={{ fontSize: '1.1rem', color: 'white', opacity: 0.9 }}>
               Nome: ISAIAS AURELIO SIMBINE
             </div>
           </div>
@@ -467,38 +471,46 @@ function App() {
           className="card"
           style={{ marginTop: '3rem', padding: '2rem', textAlign: 'center' }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '1.5rem' }}>
-            <span role="img" aria-label="upload" style={{ backgroundColor: '#3b82f6', borderRadius: '4px', padding: '4px' }}>⬆️</span>
-            <h3 style={{ fontWeight: 700, fontSize: '1.25rem', color: 'white' }}>Carregar Comprovativo de Pagamento</h3>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '1.25rem' }}>
+            <span role="img" aria-label="upload" style={{ backgroundColor: '#3b82f6', borderRadius: '4px', padding: '2px', color: 'white' }}>⬆️</span>
+            <h3 style={{ fontWeight: 700, fontSize: '1.1rem', color: 'white' }}>Carregar Comprovativo de Pagamento</h3>
           </div>
 
           <div
             style={{
-              backgroundColor: '#262f2b',
-              padding: '1rem',
-              borderRadius: '1rem',
-              marginBottom: '1.5rem',
-              cursor: 'pointer'
+              backgroundColor: '#404a44',
+              padding: '0.75rem',
+              borderRadius: '2rem',
+              marginBottom: '1.25rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px'
             }}
             onClick={() => document.getElementById('file-upload')?.click()}
           >
+            <button style={{ backgroundColor: '#fcfbf8', color: '#000', borderRadius: '2rem', padding: '6px 16px', fontSize: '0.8rem', fontWeight: 600 }}>
+              Escolher ficheiro
+            </button>
             <input
               id="file-upload"
               type="file"
               hidden
               onChange={handleFileChange}
             />
-            <span style={{ color: '#94a3b8' }}>{fileName ? fileName : 'Escolher ficheiro nenhum fic...elecionado'}</span>
+            <span style={{ color: '#fcfbf8', fontSize: '0.8rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {fileName ? fileName : 'nenhum fic...elecionado'}
+            </span>
           </div>
 
           <motion.button
             className="btn-cta"
-            style={{ backgroundColor: '#ff0000', borderRadius: '1rem', padding: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+            style={{ backgroundColor: '#cc0000', borderRadius: '0.75rem', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             <span role="img" aria-label="check">✅</span>
-            <span style={{ fontSize: '1.25rem', fontWeight: 700 }}>Enviar Comprovativo</span>
+            <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>Enviar Comprovativo</span>
           </motion.button>
         </motion.div>
 
