@@ -75,7 +75,7 @@ function App() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    alert('Número copiado para a área de transferência!');
+    alert('Número copiado com sucesso');
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -324,13 +324,13 @@ function App() {
               <span role="img" aria-label="money">💰</span>
               <span style={{ fontWeight: 700, color: '#ff4d4d', fontSize: '1.25rem' }}>M-Pesa</span>
             </div>
-            <div style={{ marginBottom: '1.5rem' }}>
+            <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
               <span style={{ fontSize: '1.25rem', color: 'white' }}>Número: </span>
               <span style={{ fontWeight: 800, fontSize: '1.75rem', color: 'white' }}>855675443</span>
               <button
                 className="copy-btn"
                 onClick={(e) => { e.stopPropagation(); copyToClipboard('855675443'); }}
-                style={{ backgroundColor: '#eab308', color: '#04160f', fontWeight: 700, borderRadius: '8px', padding: '4px 12px', fontSize: '0.875rem' }}
+                style={{ backgroundColor: '#f59e0b', color: '#04160f', fontWeight: 700, borderRadius: '8px', padding: '6px 14px', fontSize: '0.875rem' }}
               >
                 📋 Copiar
               </button>
@@ -346,13 +346,13 @@ function App() {
               <span role="img" aria-label="money-bag">💰</span>
               <span style={{ fontWeight: 700, color: '#eab308', fontSize: '1.25rem' }}>E-Mola</span>
             </div>
-            <div style={{ marginBottom: '1.5rem' }}>
+            <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
               <span style={{ fontSize: '1.25rem', color: 'white' }}>Número: </span>
               <span style={{ fontWeight: 800, fontSize: '1.75rem', color: 'white' }}>865937375</span>
               <button
                 className="copy-btn"
                 onClick={(e) => { e.stopPropagation(); copyToClipboard('865937375'); }}
-                style={{ backgroundColor: '#eab308', color: '#04160f', fontWeight: 700, borderRadius: '8px', padding: '4px 12px', fontSize: '0.875rem' }}
+                style={{ backgroundColor: '#f59e0b', color: '#04160f', fontWeight: 700, borderRadius: '8px', padding: '6px 14px', fontSize: '0.875rem' }}
               >
                 📋 Copiar
               </button>
