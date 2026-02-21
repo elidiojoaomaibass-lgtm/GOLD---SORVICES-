@@ -351,7 +351,7 @@ function App() {
                 )}
               </AnimatePresence>
             </div>
-            <div style={{ fontSize: '1.25rem', color: 'white', opacity: 0.9 }}>
+            <div style={{ fontSize: '0.85rem', color: 'white', opacity: 0.9, whiteSpace: 'nowrap' }}>
               Nome: ISAIAS AURELIO SIMBINE
             </div>
           </div>
@@ -386,7 +386,7 @@ function App() {
                 )}
               </AnimatePresence>
             </div>
-            <div style={{ fontSize: '1.25rem', color: 'white', opacity: 0.9 }}>
+            <div style={{ fontSize: '0.85rem', color: 'white', opacity: 0.9, whiteSpace: 'nowrap' }}>
               Nome: ISAIAS AURELIO SIMBINE
             </div>
           </div>
