@@ -8,7 +8,8 @@ import {
   Zap,
   BookOpen,
   Menu,
-  Coins
+  Coins,
+  X
 } from 'lucide-react';
 
 interface LoanOption {
@@ -60,6 +61,8 @@ function App() {
   const [selectedOption, setSelectedOption] = useState<LoanOption | null>(null);
   const [fileName, setFileName] = useState<string>("");
   const [notification, setNotification] = useState<{ name: string; amount: string } | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [notificationHistory, setNotificationHistory] = useState<{ name: string; amount: string; time: string }[]>([]);
 
   const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
 
@@ -67,7 +70,19 @@ function App() {
     const interval = setInterval(() => {
       const randomName = RANDOM_NAMES[Math.floor(Math.random() * RANDOM_NAMES.length)];
       const randomOption = LOAN_OPTIONS[Math.floor(Math.random() * LOAN_OPTIONS.length)];
-      setNotification({ name: randomName, amount: randomOption.receive.split('–')[0] });
+      const amount = randomOption.receive.split('–')[0];
+      const newNotification = { name: randomName, amount: amount };
+
+      setNotification(newNotification);
+
+      // Update History
+      const now = new Date();
+      const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+      setNotificationHistory(prev => [
+        { ...newNotification, time: timeStr },
+        ...prev.slice(0, 9)
+      ]);
 
       setTimeout(() => setNotification(null), 5000);
     }, 12000);
@@ -115,12 +130,66 @@ function App() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Coins className="text-gold" size={28} />
           <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
-            <span style={{ fontWeight: 800, fontSize: '1.4rem', color: '#eab308', letterSpacing: '-0.5px' }}>GOLD</span>
-            <span style={{ fontWeight: 600, fontSize: '0.75rem', color: '#fcfbf8', opacity: 0.8 }}>SERVICES <span style={{ color: '#eab308', fontSize: '0.6rem' }}>V2.5</span></span>
+            <span style={{ fontWeight: 800, fontSize: '1.4rem', color: '#f59e0b', letterSpacing: '-0.5px' }}>GOLD</span>
+            <span style={{ fontWeight: 600, fontSize: '0.75rem', color: '#fcfbf8', opacity: 0.8 }}>SERVICES <span style={{ color: '#f59e0b', fontSize: '0.6rem' }}>V2.5</span></span>
           </div>
         </div>
-        <Menu size={24} />
+        <Menu size={24} style={{ cursor: 'pointer' }} onClick={() => setIsSidebarOpen(true)} />
       </header>
+
+      {/* Sidebar Menu */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSidebarOpen(false)}
+              style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.7)', zindex: 2000, backdropFilter: 'blur(4px)' }}
+            />
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              style={{ position: 'fixed', top: 0, right: 0, width: '85%', maxWidth: '350px', height: '100%', backgroundColor: '#08120e', zIndex: 2001, padding: '1.5rem', boxShadow: '-10px 0 30px rgba(0,0,0,0.5)', borderLeft: '1px solid rgba(245, 158, 11, 0.2)' }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                <h2 style={{ fontSize: '1.25rem', color: '#f59e0b', margin: 0 }}>Histórico de Aprovações</h2>
+                <X size={24} onClick={() => setIsSidebarOpen(false)} style={{ cursor: 'pointer' }} />
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {notificationHistory.length === 0 ? (
+                  <p style={{ textAlign: 'center', color: '#94a3b8', marginTop: '2rem' }}>Aguardando novas aprovações...</p>
+                ) : (
+                  notificationHistory.map((notif, idx) => (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      key={idx}
+                      style={{ backgroundColor: 'rgba(245, 158, 11, 0.05)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(245, 158, 11, 0.1)' }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                        <span style={{ fontWeight: 700, color: 'white' }}>{notif.name}</span>
+                        <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{notif.time}</span>
+                      </div>
+                      <div style={{ color: '#22c55e', fontWeight: 600, fontSize: '0.9rem' }}>
+                        Aprovado: {notif.amount} MT
+                      </div>
+                    </motion.div>
+                  ))
+                )}
+              </div>
+
+              <div style={{ position: 'absolute', bottom: '2rem', width: 'calc(100% - 3rem)', textAlign: 'center' }}>
+                <span className="text-gold" style={{ fontSize: '0.8rem', opacity: 0.5 }}>Gold Services V2.5 - Histórico em Tempo Real</span>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       <motion.div
         className="container"
