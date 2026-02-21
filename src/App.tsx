@@ -5,7 +5,6 @@ import {
   ShieldCheck,
   Wallet,
   Zap,
-  MessageCircle,
   BookOpen,
   Menu,
   Coins
@@ -19,18 +18,16 @@ interface LoanOption {
 }
 
 const LOAN_OPTIONS: LoanOption[] = [
-  { id: 1, fee: "516 MT", receive: "5.000–7.000 MT", period: "3 meses" },
-  { id: 2, fee: "888 MT", receive: "8.000–10.000 MT", period: "4 meses" },
-  { id: 3, fee: "1099 MT", receive: "12.000–15.000 MT", period: "5 meses" },
-  { id: 4, fee: "1257 MT", receive: "20.000–23.000 MT", period: "6 meses" },
-  { id: 5, fee: "1693 MT", receive: "25.000–37.000 MT", period: "7 meses" },
-  { id: 6, fee: "1903 MT", receive: "50.000–64.000 MT", period: "8 meses" },
-  { id: 7, fee: "2109 MT", receive: "68.000–86.000 MT", period: "9 meses" },
-  { id: 8, fee: "2601 MT", receive: "87.000–100.000 MT", period: "10 meses" },
-  { id: 9, fee: "2903 MT", receive: "120.000–135.000 MT", period: "11 meses" },
-  { id: 10, fee: "3016 MT", receive: "136.000–167.000 MT", period: "12 meses" },
-  { id: 11, fee: "3801 MT", receive: "168.000–189.000 MT", period: "13 meses" },
-  { id: 12, fee: "4016 MT", receive: "190.000–200.000 MT", period: "14 meses" },
+  { id: 1, fee: "516 MT", receive: "6.000–8.000 MT", period: "3 meses" },
+  { id: 2, fee: "1099 MT", receive: "12.000–15.000 MT", period: "4 meses" },
+  { id: 3, fee: "1693 MT", receive: "25.000–37.000 MT", period: "5 meses" },
+  { id: 4, fee: "1903 MT", receive: "50.000–64.000 MT", period: "6 meses" },
+  { id: 5, fee: "2109 MT", receive: "68.000–86.000 MT", period: "7 meses" },
+  { id: 6, fee: "2601 MT", receive: "87.000–100.000 MT", period: "8 meses" },
+  { id: 7, fee: "2903 MT", receive: "120.000–135.000 MT", period: "9 meses" },
+  { id: 8, fee: "3016 MT", receive: "136.000–167.000 MT", period: "10 meses" },
+  { id: 9, fee: "3801 MT", receive: "168.000–189.000 MT", period: "11 meses" },
+  { id: 10, fee: "4016 MT", receive: "190.000–200.000 MT", period: "12 meses" },
 ];
 
 const containerVariants = {
@@ -175,11 +172,11 @@ function App() {
 
         {/* Pricing Table Title */}
         <motion.div id="loan-options" variants={itemVariants} style={{ textAlign: 'center', margin: '4rem 0 2rem' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '0.5rem' }}>
             📊 TABELA DE TAXA DE RECEPÇÃO IMEDIATA ⚠️
           </h2>
-          <p style={{ fontSize: '0.875rem', marginTop: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-            <MessageCircle size={14} className="text-gold" /> ESCOLHE A OPÇÃO IDEAL PARA TI
+          <p style={{ fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: 600 }}>
+            <span>💬</span> ESCOLHE A OPÇÃO IDEAL PARA TI
           </p>
         </motion.div>
 
@@ -189,16 +186,16 @@ function App() {
               key={opt.id}
               className={`option-item ${selectedOption?.id === opt.id ? 'selected' : ''}`}
               onClick={() => setSelectedOption(opt)}
-              whileHover={{ scale: 1.01 }}
+              whileHover={{ x: 5 }}
               whileTap={{ scale: 0.98 }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span className="badge-number" style={{ backgroundColor: '#eab308', color: '#04160f', margin: 0, width: '24px', height: '24px', borderRadius: '4px', fontSize: '0.8rem' }}>{opt.id}</span>
-                <span style={{ fontWeight: 700, fontSize: '1rem', color: '#ffffff' }}>PAGA {opt.fee}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span className="badge-number">{opt.id}</span>
+                <span style={{ fontWeight: 700, fontSize: '1.1rem', color: '#ffffff' }}>PAGA {opt.fee}</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#eab308', fontSize: '0.95rem', fontWeight: 700 }}>
-                <span style={{ fontSize: '1.1rem' }}>👉</span>
-                <span>RECEBE {opt.receive}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#ffffff', fontSize: '1rem' }}>
+                <span style={{ fontSize: '1.2rem' }}>�</span>
+                <span style={{ fontWeight: 500 }}>RECEBE {opt.receive}</span>
               </div>
             </motion.div>
           ))}

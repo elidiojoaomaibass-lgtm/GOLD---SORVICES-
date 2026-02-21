@@ -197,16 +197,30 @@ button {
 }
 
 .option-item {
-  background-color: #0d2b1f;
-  border: 1px solid rgba(234, 179, 8, 0.4);
-  padding: 0.85rem 1.25rem;
-  border-radius: 0.85rem;
+  background-color: #121815;
+  border: none;
+  padding: 1.25rem 1.5rem 1.25rem 2.5rem;
+  border-radius: 1.5rem;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 0.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  margin-bottom: 0.8rem;
+  overflow: hidden;
+}
+
+.option-item::before {
+  content: "";
+  position: absolute;
+  left: 0.75rem;
+  top: 15%;
+  height: 70%;
+  width: 8px;
+  background-color: #eab308;
+  border-radius: 10px;
 }
 
 .option-item:hover {
@@ -266,15 +280,14 @@ button {
 .badge-number {
   background-color: #2563eb;
   color: white;
-  width: 2rem;
-  height: 2rem;
+  width: 1.2rem;
+  height: 1.2rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.5rem;
-  font-weight: 800;
-  font-size: 0.9rem;
-  margin-right: 1rem;
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: 0.75rem;
 }
 
 .upload-area {
