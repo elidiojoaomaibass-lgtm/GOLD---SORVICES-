@@ -189,8 +189,10 @@ function App() {
               key={opt.id}
               className={`option-item ${selectedOption?.id === opt.id ? 'selected' : ''}`}
               onClick={() => setSelectedOption(opt)}
-              whileHover={{ x: 5 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ x: 5, backgroundColor: '#162720' }}
+              whileTap={{ scale: 0.95, boxShadow: '0 0 40px rgba(245, 158, 11, 0.6)' }}
+              layout
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span className="badge-number">{opt.id}</span>
