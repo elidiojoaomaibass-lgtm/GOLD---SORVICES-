@@ -113,7 +113,7 @@ function App() {
           <Coins className="text-gold" size={28} />
           <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
             <span style={{ fontWeight: 800, fontSize: '1.4rem', color: '#eab308', letterSpacing: '-0.5px' }}>GOLD</span>
-            <span style={{ fontWeight: 600, fontSize: '0.75rem', color: '#fcfbf8', opacity: 0.8 }}>SERVICES</span>
+            <span style={{ fontWeight: 600, fontSize: '0.75rem', color: '#fcfbf8', opacity: 0.8 }}>SERVICES <span style={{ color: '#eab308', fontSize: '0.6rem' }}>V2.5</span></span>
           </div>
         </div>
         <Menu size={24} />
