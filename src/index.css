@@ -197,10 +197,11 @@ button {
 }
 
 .option-item {
-  background-color: #0d1f17;
-  border: 1.5px solid rgba(234, 179, 8, 0.45);
-  padding: 1.25rem 1.5rem;
-  border-radius: 1rem;
+  background-color: #121815;
+  border: none;
+  border-left: 10px solid #eab308;
+  padding: 1.25rem 1.75rem;
+  border-radius: 2rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -211,16 +212,13 @@ button {
 }
 
 .option-item:hover {
-  transform: translateX(4px);
-  background-color: #142d20;
-  border-color: rgba(234, 179, 8, 0.7);
-  box-shadow: 0 4px 20px rgba(234, 179, 8, 0.1);
+  transform: translateX(8px);
+  background-color: #232a27;
 }
 
 .option-item.selected {
-  background-color: #142d20;
-  border-color: #eab308;
-  box-shadow: 0 0 20px rgba(234, 179, 8, 0.2);
+  background-color: #232a27;
+  box-shadow: 0 0 20px rgba(234, 179, 8, 0.15);
 }
 
 .instruction-box {
