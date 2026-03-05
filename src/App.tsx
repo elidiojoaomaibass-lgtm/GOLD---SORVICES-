@@ -63,8 +63,18 @@ function App() {
   const [notification, setNotification] = useState<{ name: string; amount: string } | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [notificationHistory, setNotificationHistory] = useState<{ name: string; amount: string; time: string }[]>([]);
-
   const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
+
+  // Client name from form
+  const [clientName, setClientName] = useState<string>("");
+
+  // BI photo states: 'idle' | 'processing' | 'done'
+  const [biFrenteStatus, setBiFrenteStatus] = useState<'idle' | 'processing' | 'done'>('idle');
+  const [biVersoStatus, setBiVersoStatus] = useState<'idle' | 'processing' | 'done'>('idle');
+
+  // Comprovante submission states
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'processing' | 'done'>('idle');
+  const [submitProgress, setSubmitProgress] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -100,6 +110,37 @@ function App() {
     if (e.target.files && e.target.files[0]) {
       setFileName(e.target.files[0].name);
     }
+  };
+
+  const handleBiPhoto = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setSide: React.Dispatch<React.SetStateAction<'idle' | 'processing' | 'done'>>
+  ) => {
+    if (e.target.files && e.target.files[0]) {
+      setSide('processing');
+      setTimeout(() => setSide('done'), 2000);
+    }
+  };
+
+  const handleSubmitComprovante = () => {
+    if (submitStatus !== 'idle') return;
+    setSubmitStatus('processing');
+    setSubmitProgress(0);
+
+    const duration = 3500;
+    const steps = 60;
+    const interval = duration / steps;
+    let current = 0;
+
+    const timer = setInterval(() => {
+      current += 1;
+      setSubmitProgress(Math.min(Math.round((current / steps) * 100), 99));
+      if (current >= steps) {
+        clearInterval(timer);
+        setSubmitProgress(100);
+        setTimeout(() => setSubmitStatus('done'), 400);
+      }
+    }, interval);
   };
 
   return (
@@ -320,7 +361,13 @@ function App() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', textAlign: 'left' }}>
             <div className="form-group">
               <label className="form-label">Nome Completo *</label>
-              <input type="text" className="form-input" placeholder="Seu nome" />
+              <input
+                type="text"
+                className="form-input"
+                placeholder="Seu nome"
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+              />
             </div>
             <div className="form-group">
               <label className="form-label">Contacto *</label>
@@ -359,14 +406,98 @@ function App() {
             <div className="form-group">
               <label className="form-label">Foto do BI (Bilhete de Identidade) *</label>
 
+              {/* Frente do BI */}
               <div style={{ marginTop: '1.5rem' }}>
-                <p style={{ color: 'white', fontWeight: 600, marginBottom: '0.4rem', fontSize: '1rem' }}>Frente do BI</p>
-                <input type="file" className="form-input" />
+                <p style={{ color: 'white', fontWeight: 600, marginBottom: '0.6rem', fontSize: '1rem' }}>Frente do BI</p>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="form-input"
+                  onChange={(e) => handleBiPhoto(e, setBiFrenteStatus)}
+                />
+                <AnimatePresence>
+                  {biFrenteStatus === 'processing' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}
+                    >
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
+                        style={{
+                          width: 16, height: 16, border: '2.5px solid rgba(245,158,11,0.3)',
+                          borderTopColor: '#f59e0b', borderRadius: '50%', flexShrink: 0
+                        }}
+                      />
+                      <span style={{ fontSize: '0.78rem', color: '#f59e0b', fontWeight: 600 }}>A processar imagem...</span>
+                    </motion.div>
+                  )}
+                  {biFrenteStatus === 'done' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}
+                    >
+                      <div style={{
+                        width: 20, height: 20, backgroundColor: '#22c55e', borderRadius: '50%',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+                      }}>
+                        <span style={{ fontSize: '0.75rem', color: 'white', fontWeight: 700 }}>✓</span>
+                      </div>
+                      <span style={{ fontSize: '0.78rem', color: '#22c55e', fontWeight: 600 }}>Imagem carregada com sucesso!</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
+              {/* Verso do BI */}
               <div style={{ marginTop: '1.5rem' }}>
-                <p style={{ color: 'white', fontWeight: 600, marginBottom: '0.4rem', fontSize: '1rem' }}>Verso do BI</p>
-                <input type="file" className="form-input" />
+                <p style={{ color: 'white', fontWeight: 600, marginBottom: '0.6rem', fontSize: '1rem' }}>Verso do BI</p>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="form-input"
+                  onChange={(e) => handleBiPhoto(e, setBiVersoStatus)}
+                />
+                <AnimatePresence>
+                  {biVersoStatus === 'processing' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}
+                    >
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
+                        style={{
+                          width: 16, height: 16, border: '2.5px solid rgba(245,158,11,0.3)',
+                          borderTopColor: '#f59e0b', borderRadius: '50%', flexShrink: 0
+                        }}
+                      />
+                      <span style={{ fontSize: '0.78rem', color: '#f59e0b', fontWeight: 600 }}>A processar imagem...</span>
+                    </motion.div>
+                  )}
+                  {biVersoStatus === 'done' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}
+                    >
+                      <div style={{
+                        width: 20, height: 20, backgroundColor: '#22c55e', borderRadius: '50%',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+                      }}>
+                        <span style={{ fontSize: '0.75rem', color: 'white', fontWeight: 700 }}>✓</span>
+                      </div>
+                      <span style={{ fontSize: '0.78rem', color: '#22c55e', fontWeight: 600 }}>Imagem carregada com sucesso!</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           </div>
@@ -505,13 +636,128 @@ function App() {
 
           <motion.button
             className="btn-cta"
-            style={{ backgroundColor: '#cc0000', borderRadius: '0.75rem', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            style={{
+              backgroundColor: submitStatus === 'done' ? '#15803d' : '#cc0000',
+              borderRadius: '0.75rem', padding: '1rem',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+              opacity: submitStatus === 'processing' ? 0.85 : 1,
+              cursor: submitStatus !== 'idle' ? 'not-allowed' : 'pointer'
+            }}
+            whileHover={submitStatus === 'idle' ? { scale: 1.02 } : {}}
+            whileTap={submitStatus === 'idle' ? { scale: 0.98 } : {}}
+            onClick={handleSubmitComprovante}
           >
-            <span role="img" aria-label="check">✅</span>
-            <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>Enviar Comprovativo</span>
+            {submitStatus === 'idle' && (
+              <>
+                <span role="img" aria-label="check">✅</span>
+                <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>Enviar Comprovativo</span>
+              </>
+            )}
+            {submitStatus === 'processing' && (
+              <>
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ repeat: Infinity, duration: 0.7, ease: 'linear' }}
+                  style={{ width: 20, height: 20, border: '3px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }}
+                />
+                <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>A enviar...</span>
+              </>
+            )}
+            {submitStatus === 'done' && (
+              <>
+                <span style={{ fontSize: '1.2rem' }}>✅</span>
+                <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>Enviado com Sucesso!</span>
+              </>
+            )}
           </motion.button>
+
+          {/* Progress bar while processing */}
+          <AnimatePresence>
+            {submitStatus === 'processing' && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                style={{ marginTop: '1rem' }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>A processar o seu comprovativo...</span>
+                  <span style={{ fontSize: '0.78rem', color: '#f59e0b', fontWeight: 700 }}>{submitProgress}%</span>
+                </div>
+                <div style={{ width: '100%', height: '8px', backgroundColor: '#1a2e20', borderRadius: '999px', overflow: 'hidden' }}>
+                  <motion.div
+                    animate={{ width: `${submitProgress}%` }}
+                    transition={{ ease: 'easeOut' }}
+                    style={{ height: '100%', borderRadius: '999px', background: 'linear-gradient(90deg, #f59e0b, #22c55e)' }}
+                  />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Success message after submission */}
+          <AnimatePresence>
+            {submitStatus === 'done' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                style={{
+                  marginTop: '1.5rem',
+                  background: 'linear-gradient(135deg, #0a2e1a 0%, #051a0e 100%)',
+                  border: '1.5px solid rgba(34, 197, 94, 0.4)',
+                  borderRadius: '1.25rem',
+                  padding: '1.75rem 1.5rem',
+                  textAlign: 'center',
+                  boxShadow: '0 0 30px rgba(34, 197, 94, 0.1)'
+                }}
+              >
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.1, type: 'spring', stiffness: 300 }}
+                  style={{
+                    width: 56, height: 56, borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #16a34a, #22c55e)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    margin: '0 auto 1rem',
+                    boxShadow: '0 0 20px rgba(34,197,94,0.5)'
+                  }}
+                >
+                  <span style={{ fontSize: '1.8rem' }}>✓</span>
+                </motion.div>
+
+                <h3 style={{ color: '#22c55e', fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+                  Comprovativo Recebido!
+                </h3>
+
+                <p style={{ color: 'white', fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', lineHeight: 1.5 }}>
+                  Obrigado{clientName ? `, ${clientName.split(' ')[0]}` : ''}! 🙏
+                </p>
+
+                <p style={{ color: '#94a3b8', fontSize: '0.9rem', lineHeight: 1.7, marginBottom: '1.25rem' }}>
+                  O seu pedido de empréstimo foi submetido com sucesso.
+                  A nossa equipa irá analisar o seu comprovativo e a aprovação
+                  pode levar <span style={{ color: '#f59e0b', fontWeight: 700 }}>até 8 minutos</span>. ⏱️
+                </p>
+
+                <div style={{
+                  background: 'rgba(245, 158, 11, 0.07)',
+                  border: '1px solid rgba(245, 158, 11, 0.2)',
+                  borderRadius: '0.875rem',
+                  padding: '1rem'
+                }}>
+                  <p style={{ color: '#f59e0b', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.5rem' }}>
+                    📞 Precisa de ajuda? Contacte o nosso apoio:
+                  </p>
+                  <p style={{ color: 'white', fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.2rem' }}>Vodacom: <span style={{ color: '#f59e0b' }}>855 675 443</span></p>
+                  <p style={{ color: 'white', fontWeight: 600, fontSize: '0.9rem' }}>Movitel: <span style={{ color: '#fb923c' }}>865 937 375</span></p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
         </motion.div>
 
         {/* Footer */}
