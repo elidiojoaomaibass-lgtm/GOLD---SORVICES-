@@ -634,42 +634,62 @@ function App() {
             </span>
           </div>
 
-          <motion.button
-            className="btn-cta"
-            style={{
-              backgroundColor: submitStatus === 'done' ? '#15803d' : '#cc0000',
+          {/* Botão inativo enquanto não houver ficheiro selecionado */}
+          {!fileName && submitStatus === 'idle' && (
+            <div style={{
               borderRadius: '0.75rem', padding: '1rem',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-              opacity: submitStatus === 'processing' ? 0.85 : 1,
-              cursor: submitStatus !== 'idle' ? 'not-allowed' : 'pointer'
-            }}
-            whileHover={submitStatus === 'idle' ? { scale: 1.02 } : {}}
-            whileTap={submitStatus === 'idle' ? { scale: 0.98 } : {}}
-            onClick={handleSubmitComprovante}
-          >
-            {submitStatus === 'idle' && (
-              <>
-                <span role="img" aria-label="check">✅</span>
-                <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>Enviar Comprovativo</span>
-              </>
-            )}
-            {submitStatus === 'processing' && (
-              <>
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 0.7, ease: 'linear' }}
-                  style={{ width: 20, height: 20, border: '3px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }}
-                />
-                <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>A enviar...</span>
-              </>
-            )}
-            {submitStatus === 'done' && (
-              <>
-                <span style={{ fontSize: '1.2rem' }}>✅</span>
-                <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>Enviado com Sucesso!</span>
-              </>
-            )}
-          </motion.button>
+              backgroundColor: '#1e2922',
+              border: '1.5px dashed rgba(255,255,255,0.15)',
+              cursor: 'not-allowed',
+              opacity: 0.55
+            }}>
+              <span style={{ fontSize: '1.1rem' }}>🔒</span>
+              <span style={{ fontSize: '1rem', fontWeight: 700, color: '#94a3b8' }}>Enviar Comprovativo</span>
+            </div>
+          )}
+
+          {(fileName || submitStatus !== 'idle') && (
+            <motion.button
+              className="btn-cta"
+              style={{
+                backgroundColor: submitStatus === 'done' ? '#15803d' : '#cc0000',
+                borderRadius: '0.75rem', padding: '1rem',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                opacity: submitStatus === 'processing' ? 0.85 : 1,
+                cursor: submitStatus !== 'idle' ? 'not-allowed' : 'pointer'
+              }}
+              whileHover={submitStatus === 'idle' ? { scale: 1.02 } : {}}
+              whileTap={submitStatus === 'idle' ? { scale: 0.98 } : {}}
+              onClick={handleSubmitComprovante}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            >
+              {submitStatus === 'idle' && (
+                <>
+                  <span role="img" aria-label="check">✅</span>
+                  <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>Enviar Comprovativo</span>
+                </>
+              )}
+              {submitStatus === 'processing' && (
+                <>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 0.7, ease: 'linear' }}
+                    style={{ width: 20, height: 20, border: '3px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }}
+                  />
+                  <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>A enviar...</span>
+                </>
+              )}
+              {submitStatus === 'done' && (
+                <>
+                  <span style={{ fontSize: '1.2rem' }}>✅</span>
+                  <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>Enviado com Sucesso!</span>
+                </>
+              )}
+            </motion.button>
+          )}
 
           {/* Progress bar while processing */}
           <AnimatePresence>
